@@ -4,6 +4,7 @@ import {
   ConfigService,
 } from '@nestjs/config';
 
+import config from './config';
 import pubgConfig from './pubg';
 import { validationSchema } from './validation.schema';
 
@@ -11,7 +12,7 @@ import { validationSchema } from './validation.schema';
   imports: [
     NestConfigModule.forRoot({
       envFilePath: '.env',
-      load: [pubgConfig],
+      load: [config, pubgConfig],
       validationSchema: validationSchema,
     }),
   ],
