@@ -8,13 +8,13 @@ export class SeasonsService {
   constructor(private readonly pubgService: PubgService) {}
 
   // 시즌 조회
-  async getSeasons(platform: PlatformType): Promise<Season> {
+  async getSeasons(platform: PlatformType): Promise<SeasonData[]> {
     const response = await this.pubgService.req<Season>(
       'GET',
       platform,
       'seasons',
     );
-    return response;
+    return response.data;
   }
 
   // 현재 시즌 조회
