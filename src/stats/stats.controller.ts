@@ -13,4 +13,12 @@ export class StatsController {
   ) {
     return this.statsService.getRankStats(platform, nickname);
   }
+
+  @Get('normal')
+  async getNormalStats(
+    @Query('platform') platform: PlatformType,
+    @Query('nickname') nickname: string,
+  ) {
+    return this.statsService.getNormalStats(platform, nickname);
+  }
 }
