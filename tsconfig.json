@@ -20,7 +20,10 @@
     "paths": {
       "@/*": ["src/*"],
       "@config/*": ["src/config/*"],
-      "@app/*": ["src/app/*"]
+      "@app/*": ["src/app/*"],
+      "@const/*": ["src/constants/*"],
+      "@pubg/*": ["src/pubg/*"],
+      "@models/*": ["src/models/*"]
     }
   }
 }
