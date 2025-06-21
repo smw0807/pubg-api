@@ -29,9 +29,11 @@ export class PubgService {
     }
 
     try {
+      const url = `${this.apiUrl}/${platform}/${requestUrl}`;
+      console.log(url);
       const response = (await firstValueFrom(
         this.httpService.request<T>({
-          url: `${this.apiUrl}/${platform}/${requestUrl}`,
+          url,
           method,
           headers: {
             Authorization: `Bearer ${this.apiKey}`,
@@ -47,6 +49,9 @@ export class PubgService {
       return response.data;
     } catch (error) {
       if (error instanceof Error) {
+        if (error.message.includes('404')) {
+          throw new Error('API URL is not valid');
+        }
         throw new Error(`Request failed: ${error.message}`);
       }
       throw new Error('Request failed');
