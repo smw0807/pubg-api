@@ -28,12 +28,10 @@ export class PubgService {
       throw new Error('API key or base URL is not set');
     }
 
-    const url = `${this.apiUrl}/${platform}/${requestUrl}`;
-
     try {
       const response = (await firstValueFrom(
         this.httpService.request<T>({
-          url,
+          url: `${this.apiUrl}/${platform}/${requestUrl}`,
           method,
           headers: {
             Authorization: `Bearer ${this.apiKey}`,

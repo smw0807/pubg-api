@@ -21,7 +21,7 @@
       "@/*": ["src/*"],
       "@config/*": ["src/config/*"],
       "@app/*": ["src/app/*"],
-      "@const/*": ["src/constants/*"],
+      "@constants/*": ["src/constants/*"],
       "@pubg/*": ["src/pubg/*"],
       "@models/*": ["src/models/*"]
     }
