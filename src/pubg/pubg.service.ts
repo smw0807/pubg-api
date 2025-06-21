@@ -24,7 +24,6 @@ export class PubgService {
     platform: PlatformType,
     requestUrl: string,
   ): Promise<T> {
-    console.log(this.apiKey, this.apiUrl);
     if (!this.apiKey || !this.apiUrl) {
       throw new Error('API key or base URL is not set');
     }
