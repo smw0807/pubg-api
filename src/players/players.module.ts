@@ -7,5 +7,6 @@ import { PubgModule } from '@pubg/pubg.module';
   controllers: [PlayersController],
   providers: [PlayersService],
   imports: [PubgModule],
+  exports: [PlayersService],
 })
 export class PlayersModule {}
