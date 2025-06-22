@@ -1,6 +1,6 @@
 import { PlatformType } from '@/constants/platform';
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 
@@ -8,6 +8,7 @@ type Method = 'GET' | 'POST';
 
 @Injectable()
 export class PubgService {
+  private readonly logger = new Logger(PubgService.name);
   private readonly apiUrl: string;
   private readonly apiKey: string;
 
@@ -30,7 +31,13 @@ export class PubgService {
 
     try {
       const url = `${this.apiUrl}/${platform}/${requestUrl}`;
-      console.log(url);
+      this.logger.log(
+        {
+          method,
+          url,
+        },
+        'PubgService.req()',
+      );
       const response = (await firstValueFrom(
         this.httpService.request<T>({
           url,
