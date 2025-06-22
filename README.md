@@ -1,6 +1,10 @@
 # PUBG API
 
-배그 API
+처음으로 배그 API를 사용해서 [pubg_your.stat](https://github.com/smw0807/pubg_your.stat)를 만들었었습니다.  
+만들 때 프론트엔드 프로젝트와 함께 작업하다 보니 시간이 부족해서 스탯 관련 API만 사용한 것이 아쉬웠는데,  
+이번에는 백엔드로만 구성해서 프로젝트를 시작했습니다.  
+매치 관련 API는 1개뿐이지만, 출력되는 데이터가 많아서 다양한 기능들을 만들 수 있을 것 같아 만들어봤습니다.  
+스웨거를 통해 API를 확인해볼 수 있습니다.
 
 # 개발 환경
 
@@ -16,6 +20,8 @@
 # 기능 구성
 
 1. 플레이어 정보 조회
+   - 플레이어 정보 조회
+   - 플레이어 정보 및 최근 10매치 요약정보 조회
 2. 시즌 정보 조회
 3. 스탯 조회
    - 랭크 스탯 조회
@@ -30,37 +36,6 @@
    - 플레이어 성과 분석 (KDA, 정확도, 효율성)
    - 매치 통계 요약 (총계, 평균, 극값)
    - 플레이어 검색 및 필터링
-
-# API 엔드포인트
-
-## 매치 분석 API
-
-### 기본 매치 정보
-
-- `GET /matches?platform={platform}&matchId={matchId}` - 원본 매치 데이터
-- `GET /matches/summary?platform={platform}&matchId={matchId}` - 매치 요약 정보
-
-### 팀 분석
-
-- `GET /matches/teams?platform={platform}&matchId={matchId}` - 팀별 순위 정보
-- `GET /matches/analysis/teams?platform={platform}&matchId={matchId}` - 팀별 상세 분석
-
-### 플레이어 분석
-
-- `GET /matches/players?platform={platform}&matchId={matchId}` - 플레이어별 상세 통계
-- `GET /matches/analysis/performance?platform={platform}&matchId={matchId}` - 플레이어 성과 분석
-- `GET /matches/player/{playerName}?platform={platform}&matchId={matchId}` - 특정 플레이어 매치 통계
-
-### 리더보드
-
-- `GET /matches/leaderboard/kills?platform={platform}&matchId={matchId}` - 킬 순위
-- `GET /matches/leaderboard/damage?platform={platform}&matchId={matchId}` - 데미지 순위
-- `GET /matches/leaderboard/survival?platform={platform}&matchId={matchId}` - 생존 시간 순위
-
-### 통계 및 검색
-
-- `GET /matches/statistics?platform={platform}&matchId={matchId}` - 매치 통계 요약
-- `GET /matches/search?platform={platform}&matchId={matchId}&q={searchTerm}` - 플레이어 검색
 
 # 실행 방법
 
