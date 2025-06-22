@@ -10,11 +10,11 @@ export class PlayersService {
     platform: PlatformType,
     nickname: string,
   ): Promise<PlayerDataItem> {
-    const response = await this.pubgService.req<Player>(
-      'GET',
+    const response = await this.pubgService.req<Player>({
+      method: 'GET',
       platform,
-      `players?filter[playerNames]=${nickname}`,
-    );
+      requestUrl: `players?filter[playerNames]=${nickname}`,
+    });
     return response.data[0];
   }
 }

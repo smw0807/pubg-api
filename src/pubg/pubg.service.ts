@@ -20,17 +20,23 @@ export class PubgService {
     this.apiKey = this.configService.get<string>('pubg.apiKey') ?? '';
   }
 
-  async req<T>(
-    method: Method,
-    platform: PlatformType,
-    requestUrl: string,
-  ): Promise<T> {
+  async req<T>({
+    method,
+    platform,
+    requestUrl,
+  }: {
+    method: Method;
+    platform?: PlatformType;
+    requestUrl: string;
+  }): Promise<T> {
     if (!this.apiKey || !this.apiUrl) {
       throw new Error('API key or base URL is not set');
     }
 
     try {
-      const url = `${this.apiUrl}/${platform}/${requestUrl}`;
+      const url = platform
+        ? `${this.apiUrl}/${platform}/${requestUrl}`
+        : `${this.apiUrl}/${requestUrl}`;
       this.logger.log(
         {
           method,
@@ -55,6 +61,7 @@ export class PubgService {
 
       return response.data;
     } catch (error) {
+      console.log('error : ', error);
       if (error instanceof Error) {
         if (error.message.includes('404')) {
           throw new Error('API URL is not valid');

@@ -26,11 +26,11 @@ export class StatsService {
 
     // 현재 시즌 스탯 조회
     const requestUrl = `players/${playerId}/seasons/${seasonId}/ranked`;
-    const stats = await this.pubgService.req<RankStats>(
-      'GET',
+    const stats = await this.pubgService.req<RankStats>({
+      method: 'GET',
       platform,
       requestUrl,
-    );
+    });
 
     const allStats = stats.data.attributes.rankedGameModeStats.All;
     const squadStats = stats.data.attributes.rankedGameModeStats.squad;
@@ -56,11 +56,11 @@ export class StatsService {
 
     // 현재 시즌 스탯 조회
     const requestUrl = `players/${playerId}/seasons/${seasonId}`;
-    const stats = await this.pubgService.req<NormalStats>(
-      'GET',
+    const stats = await this.pubgService.req<NormalStats>({
+      method: 'GET',
       platform,
       requestUrl,
-    );
+    });
 
     const duoStats = stats.data.attributes.gameModeStats.duo;
     const duoFppStats = stats.data.attributes.gameModeStats['duo-fpp'];

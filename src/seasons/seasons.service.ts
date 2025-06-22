@@ -9,21 +9,21 @@ export class SeasonsService {
 
   // 시즌 조회
   async getSeasons(platform: PlatformType): Promise<SeasonData[]> {
-    const response = await this.pubgService.req<Season>(
-      'GET',
+    const response = await this.pubgService.req<Season>({
+      method: 'GET',
       platform,
-      'seasons',
-    );
+      requestUrl: 'seasons',
+    });
     return response.data;
   }
 
   // 현재 시즌 조회
   async getCurrentSeason(platform: PlatformType): Promise<SeasonData> {
-    const response = await this.pubgService.req<Season>(
-      'GET',
+    const response = await this.pubgService.req<Season>({
+      method: 'GET',
       platform,
-      'seasons',
-    );
+      requestUrl: 'seasons',
+    });
     return response.data.filter(item => item.attributes.isCurrentSeason)[0];
   }
 }
