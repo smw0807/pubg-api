@@ -61,7 +61,6 @@ export class PubgService {
 
       return response.data;
     } catch (error) {
-      console.log('error : ', error);
       if (error instanceof Error) {
         if (error.message.includes('404')) {
           throw new Error('API URL is not valid');
