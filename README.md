@@ -66,31 +66,3 @@ yarn dev
 yarn build
 yarn start
 ```
-
-# 사용 예시
-
-## 매치 요약 정보 조회
-
-```bash
-curl "http://localhost:3000/matches/summary?platform=kakao&matchId=aa8df751-b349-48e9-bde1-f5100bfdac14"
-```
-
-## 팀별 순위 조회
-
-```bash
-curl "http://localhost:3000/matches/teams?platform=kakao&matchId=aa8df751-b349-48e9-bde1-f5100bfdac14"
-```
-
-## 킬 리더보드 조회
-
-```bash
-curl "http://localhost:3000/matches/leaderboard/kills?platform=kakao&matchId=aa8df751-b349-48e9-bde1-f5100bfdac14"
-```
-
-## 특정 플레이어 통계 조회
-
-```bash
-curl "http://localhost:3000/matches/player/INI_Sogogi?platform=kakao&matchId=aa8df751-b349-48e9-bde1-f5100bfdac14"
-```
-
-# 참고 URL
