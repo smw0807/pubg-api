@@ -4,8 +4,6 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 
-type Method = 'GET' | 'POST';
-
 @Injectable()
 export class PubgService {
   private readonly logger = new Logger(PubgService.name);
@@ -20,12 +18,10 @@ export class PubgService {
     this.apiKey = this.configService.get<string>('pubg.apiKey') ?? '';
   }
 
-  async req<T>({
-    method,
+  async GET<T>({
     platform,
     requestUrl,
   }: {
-    method: Method;
     platform?: PlatformType;
     requestUrl: string;
   }): Promise<T> {
@@ -39,7 +35,7 @@ export class PubgService {
         : `${this.apiUrl}/${requestUrl}`;
       this.logger.log(
         {
-          method,
+          method: 'GET',
           url,
         },
         'PubgService.req()',
@@ -47,7 +43,7 @@ export class PubgService {
       const response = (await firstValueFrom(
         this.httpService.request<T>({
           url,
-          method,
+          method: 'GET',
           headers: {
             Authorization: `Bearer ${this.apiKey}`,
             accept: 'application/vnd.api+json',

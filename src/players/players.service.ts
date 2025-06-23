@@ -10,8 +10,7 @@ export class PlayersService {
     platform: PlatformType,
     nickname: string,
   ): Promise<PlayerDataItem> {
-    const response = await this.pubgService.req<Player>({
-      method: 'GET',
+    const response = await this.pubgService.GET<Player>({
       platform,
       requestUrl: `players?filter[playerNames]=${nickname}`,
     });

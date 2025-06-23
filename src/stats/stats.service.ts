@@ -26,8 +26,7 @@ export class StatsService {
 
     // 현재 시즌 스탯 조회
     const requestUrl = `players/${playerId}/seasons/${seasonId}/ranked`;
-    const stats = await this.pubgService.req<RankStats>({
-      method: 'GET',
+    const stats = await this.pubgService.GET<RankStats>({
       platform,
       requestUrl,
     });
@@ -56,8 +55,7 @@ export class StatsService {
 
     // 현재 시즌 스탯 조회
     const requestUrl = `players/${playerId}/seasons/${seasonId}`;
-    const stats = await this.pubgService.req<NormalStats>({
-      method: 'GET',
+    const stats = await this.pubgService.GET<NormalStats>({
       platform,
       requestUrl,
     });

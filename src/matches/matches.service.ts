@@ -9,8 +9,7 @@ export class MatchesService {
 
   async getMatches(platform: PlatformType, matchId: string) {
     const requestUrl = `matches/${matchId}`;
-    const matches = await this.pubgService.req({
-      method: 'GET',
+    const matches = await this.pubgService.GET({
       platform,
       requestUrl,
     });

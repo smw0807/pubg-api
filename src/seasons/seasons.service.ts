@@ -9,8 +9,7 @@ export class SeasonsService {
 
   // 시즌 조회
   async getSeasons(platform: PlatformType): Promise<SeasonData[]> {
-    const response = await this.pubgService.req<Season>({
-      method: 'GET',
+    const response = await this.pubgService.GET<Season>({
       platform,
       requestUrl: 'seasons',
     });
@@ -19,8 +18,7 @@ export class SeasonsService {
 
   // 현재 시즌 조회
   async getCurrentSeason(platform: PlatformType): Promise<SeasonData> {
-    const response = await this.pubgService.req<Season>({
-      method: 'GET',
+    const response = await this.pubgService.GET<Season>({
       platform,
       requestUrl: 'seasons',
     });
