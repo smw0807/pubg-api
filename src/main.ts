@@ -10,6 +10,8 @@ async function bootstrap() {
 
   app.useLogger(winstonLogger);
 
+  app.setGlobalPrefix('api');
+
   // ValidationPipe 추가
   app.useGlobalPipes(
     new ValidationPipe({
@@ -21,7 +23,7 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
   const swaggerConfig = new DocumentBuilder()
-    .setTitle(configService.get<string>('projectName')!)
+    .setTitle(configService.get<string>('app.projectName')!)
     .setDescription('PUBG API')
     .setVersion('1.0')
     .build();
@@ -29,6 +31,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(configService.get<number>('port') ?? 3000);
+  await app.listen(configService.get<number>('app.projectPort') ?? 3000);
 }
 void bootstrap();
