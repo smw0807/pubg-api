@@ -1,6 +1,6 @@
 import { PlatformType } from '@/constants/platform';
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 
@@ -56,14 +56,20 @@ export class PubgService {
       }
 
       return response.data;
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message.includes('404')) {
-          throw new Error('API URL is not valid');
+    } catch (e) {
+      if (e instanceof Error) {
+        // players 조회 시 404 에러 발생 시 에러 문구 변경
+        if (requestUrl.includes('players') && e.message.includes('404')) {
+          throw new HttpException(
+            '플레이어 정보를 찾을 수 없습니다.',
+            HttpStatus.NOT_FOUND,
+          );
         }
-        throw new Error(`Request failed: ${error.message}`);
       }
-      throw new Error('Request failed');
+      throw new HttpException(
+        'API 요청에 실패했습니다.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
