@@ -38,4 +38,26 @@ export class StatsController {
   ) {
     return this.statsService.getNormalStats(platform, playerName);
   }
+
+  @Get('recent')
+  @ApiOperation({ summary: '최근 매치 스탯 조회' })
+  @ApiQuery({
+    name: 'platform',
+    description: '플랫폼 타입',
+    enum: ['steam', 'kakao'],
+    example: 'kakao',
+    required: true,
+  })
+  @ApiQuery({
+    name: 'playerName',
+    description: '플레이어 닉네임',
+    example: 'PlayerName123',
+    required: true,
+  })
+  async getRecentMatchStats(
+    @Query('platform') platform: PlatformType,
+    @Query('playerName') playerName: string,
+  ) {
+    return this.statsService.getRecentMatchStats(platform, playerName);
+  }
 }

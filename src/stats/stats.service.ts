@@ -1,4 +1,5 @@
 import { PlatformType } from '@/constants/platform';
+import { MatchesService } from '@/matches/matches.service';
 import { NormalStats } from '@/models/normalStats';
 import { RankStats } from '@/models/rankStats';
 import { PlayersService } from '@/players/players.service';
@@ -12,6 +13,7 @@ export class StatsService {
     private readonly pubgService: PubgService,
     private readonly playersService: PlayersService,
     private readonly seasonsService: SeasonsService,
+    private readonly matchesService: MatchesService,
   ) {}
 
   // 랭크 스탯 조회
@@ -75,5 +77,19 @@ export class StatsService {
       squad: squadStats,
       squadFpp: squadFppStats,
     };
+  }
+
+  // 최근 매치 스탯 조회
+  async getRecentMatchStats(platform: PlatformType, playerName: string) {
+    // 닉네임으로 플레이어 아이디 구하기
+    const player = await this.playersService.getPlayers(platform, playerName);
+
+    const matches = player.relationships.matches.data.map(v => v.id);
+    const matchStats = await Promise.all(
+      matches.map(matchId =>
+        this.matchesService.getPlayerMatchStats(platform, matchId, playerName),
+      ),
+    );
+    return matchStats;
   }
 }
