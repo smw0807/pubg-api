@@ -203,12 +203,19 @@ export class MatchesService {
     const player = participants.find(
       p => p.attributes.stats.name.toLowerCase() === playerName.toLowerCase(),
     );
+    const roster = this.getRosters(matchData).find(r =>
+      r.relationships.participants.data.some(p => p.id === player?.id),
+    );
 
     if (!player) {
       throw new Error(`Player ${playerName} not found in this match`);
     }
+    if (!roster) {
+      throw new Error(`Player ${playerName} not found in this match`);
+    }
 
     const stats = player.attributes.stats;
+    const teamStats = roster.attributes;
     return {
       name: stats.name,
       playerId: stats.playerId,
@@ -240,6 +247,9 @@ export class MatchesService {
         vehicleDestroys: stats.vehicleDestroys,
       },
       team: {
+        rank: teamStats.stats.rank,
+        teamId: teamStats.stats.teamId,
+        won: teamStats.won,
         revives: stats.revives,
         DBNOs: stats.DBNOs,
         teamKills: stats.teamKills,
