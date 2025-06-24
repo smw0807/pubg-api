@@ -65,6 +65,30 @@ export class PubgService {
             HttpStatus.NOT_FOUND,
           );
         }
+        if (requestUrl.includes('matches') && e.message.includes('404')) {
+          throw new HttpException(
+            '매치 정보를 찾을 수 없습니다.',
+            HttpStatus.NOT_FOUND,
+          );
+        }
+        if (e.message.includes('401')) {
+          throw new HttpException(
+            'API 키가 올바르지 않습니다. 관리자에게 문의하세요.',
+            HttpStatus.UNAUTHORIZED,
+          );
+        }
+        if (e.message.includes('415') || e.message.includes('400')) {
+          throw new HttpException(
+            '요청 형식이 올바르지 않습니다. 관리자에게 문의하세요.',
+            HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+          );
+        }
+        if (e.message.includes('429')) {
+          throw new HttpException(
+            'API 요청 제한을 초과했습니다. 잠시 후 다시 시도해주세요.',
+            HttpStatus.TOO_MANY_REQUESTS,
+          );
+        }
       }
       throw new HttpException(
         'API 요청에 실패했습니다.',
