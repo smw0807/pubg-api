@@ -18,7 +18,7 @@ export class GetStatsDto {
   })
   @IsString()
   @IsNotEmpty()
-  nickname: string;
+  playerName: string;
 }
 
 // 응답 DTO들

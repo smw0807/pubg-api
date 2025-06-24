@@ -28,7 +28,7 @@ export class PlayersController {
     required: true,
   })
   @ApiQuery({
-    name: 'nickname',
+    name: 'playerName',
     description: '플레이어 닉네임',
     example: 'PlayerName123',
     required: true,
@@ -39,8 +39,8 @@ export class PlayersController {
   })
   async getPlayers(
     @Query('platform') platform: PlatformType,
-    @Query('nickname') nickname: string,
+    @Query('playerName') playerName: string,
   ): Promise<PlayerDataItem> {
-    return this.playersService.getPlayers(platform, nickname);
+    return this.playersService.getPlayers(platform, playerName);
   }
 }

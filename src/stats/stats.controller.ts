@@ -15,12 +15,12 @@ export class StatsController {
     example: 'kakao',
     required: true,
   })
-  @ApiQuery({ name: 'nickname', type: String, required: true })
+  @ApiQuery({ name: 'playerName', type: String, required: true })
   async getRankStats(
     @Query('platform') platform: PlatformType,
-    @Query('nickname') nickname: string,
+    @Query('playerName') playerName: string,
   ) {
-    return this.statsService.getRankStats(platform, nickname);
+    return this.statsService.getRankStats(platform, playerName);
   }
 
   @Get('normal')
@@ -31,11 +31,11 @@ export class StatsController {
     example: 'kakao',
     required: true,
   })
-  @ApiQuery({ name: 'nickname', type: String, required: true })
+  @ApiQuery({ name: 'playerName', type: String, required: true })
   async getNormalStats(
     @Query('platform') platform: PlatformType,
-    @Query('nickname') nickname: string,
+    @Query('playerName') playerName: string,
   ) {
-    return this.statsService.getNormalStats(platform, nickname);
+    return this.statsService.getNormalStats(platform, playerName);
   }
 }

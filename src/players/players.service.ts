@@ -8,11 +8,11 @@ export class PlayersService {
 
   async getPlayers(
     platform: PlatformType,
-    nickname: string,
+    playerName: string,
   ): Promise<PlayerDataItem> {
     const response = await this.pubgService.GET<Player>({
       platform,
-      requestUrl: `players?filter[playerNames]=${nickname}`,
+      requestUrl: `players?filter[playerNames]=${playerName}`,
     });
     return response.data[0];
   }

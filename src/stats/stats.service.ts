@@ -15,9 +15,9 @@ export class StatsService {
   ) {}
 
   // 랭크 스탯 조회
-  async getRankStats(platform: PlatformType, nickname: string) {
+  async getRankStats(platform: PlatformType, playerName: string) {
     // 닉네임으로 플레이어 아이디 구하기
-    const player = await this.playersService.getPlayers(platform, nickname);
+    const player = await this.playersService.getPlayers(platform, playerName);
     const playerId = player.id;
 
     // 현재 시즌 아이디 구하기
@@ -44,9 +44,9 @@ export class StatsService {
   }
 
   // 노말 스탯 조회
-  async getNormalStats(platform: PlatformType, nickname: string) {
+  async getNormalStats(platform: PlatformType, playerName: string) {
     // 닉네임으로 플레이어 아이디 구하기
-    const player = await this.playersService.getPlayers(platform, nickname);
+    const player = await this.playersService.getPlayers(platform, playerName);
     const playerId = player.id;
 
     // 현재 시즌 아이디 구하기
