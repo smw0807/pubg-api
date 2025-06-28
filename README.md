@@ -68,5 +68,8 @@ yarn start
 
 # 참고 URL
 
-1. https://mag1c.tistory.com/465
+1. CI/CD
+   - https://mag1c.tistory.com/465
+   - https://velog.io/@zuckerfrei/Github-Actions-1.-self-hosted-runner
 2. PUBG API (https://documentation.pubg.com/en/introduction.html)
+3. Runner 생성 실패 https://velog.io/@shdrnrhd113/Runner-%EC%83%9D%EC%84%B1-%EC%95%88%EB%90%98%EB%8A%94-%EB%AC%B8%EC%A0%9C
