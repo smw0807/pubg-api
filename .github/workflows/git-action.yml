@@ -19,6 +19,6 @@ jobs:
       - name: Build the Docker image
         run: docker build -t pubg-api .
       - name: taging
-        run: docker tag pubg-api smw0807/pubg-api:1.0.0
+        run: docker tag pubg-api smw0807/pubg-api:1.0.1
       - name: Push to Dockerhub
-        run: docker push smw0807/pubg-api:1.0.0
+        run: docker push smw0807/pubg-api:1.0.1

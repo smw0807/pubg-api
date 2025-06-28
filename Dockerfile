@@ -1,20 +1,38 @@
 # Base image
-FROM node:22-alpine
+FROM node:22-alpine AS builder
 
 # Create app directory
 WORKDIR /usr/src/app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-COPY package*.json ./
+# Copy package files
+COPY package*.json yarn.lock ./
 
-# Install app dependencies
-RUN yarn install
+# Install dependencies
+RUN yarn install --frozen-lockfile
 
-# Bundle app source
+# Copy source code
 COPY . .
 
-# Creates a "dist" folder with the production build
+# Build the application
 RUN yarn build
 
-# Start the server using the production build
+# Production stage
+FROM node:22-alpine AS production
+
+# Create app directory
+WORKDIR /usr/src/app
+
+# Copy package files
+COPY package*.json yarn.lock ./
+
+# Install only production dependencies
+RUN yarn install --frozen-lockfile --production && yarn cache clean
+
+# Copy built application from builder stage
+COPY --from=builder /usr/src/app/dist ./dist
+
+# Expose port
+EXPOSE 3000
+
+# Start the server
 CMD [ "node", "dist/main.js" ]
