@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Pull Docker image
-        run: sudo docker pull smw/pubg-api:0.0.1
+        run: sudo docker pull smw0807/pubg-api:latest
       - name: Delete Old docker container
         run: sudo docker rm -f pubg-api-container || true
       - name: Run Docker Container
