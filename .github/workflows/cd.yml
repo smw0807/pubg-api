@@ -2,7 +2,7 @@ name: CD Pipeline
 
 on:
   workflow_run:
-    workflows: ['CI Pipeline']
+    workflows: ['Docker Image CI']
     types:
       - completed
 
@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Pull Docker image
-        run: sudo docker pull smw/pubg-api:latest
+        run: sudo docker pull smw/pubg-api:0.0.1
       - name: Delete Old docker container
         run: sudo docker rm -f pubg-api-container || true
       - name: Run Docker Container
