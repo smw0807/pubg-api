@@ -15,7 +15,6 @@
 # 기술 스택
 
 - NestJS (https://docs.nestjs.com/)
-- PUBG API (https://documentation.pubg.com/en/introduction.html)
 
 # 기능 구성
 
@@ -70,3 +69,4 @@ yarn start
 # 참고 URL
 
 1. https://mag1c.tistory.com/465
+2. PUBG API (https://documentation.pubg.com/en/introduction.html)
