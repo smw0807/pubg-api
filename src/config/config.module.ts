@@ -6,13 +6,14 @@ import {
 
 import config from './config';
 import pubgConfig from './pubg';
+import corsConfig from './cors';
 import { validationSchema } from './validation.schema';
 
 @Module({
   imports: [
     NestConfigModule.forRoot({
       envFilePath: '.env',
-      load: [config, pubgConfig],
+      load: [config, pubgConfig, corsConfig],
       validationSchema: validationSchema,
     }),
   ],
