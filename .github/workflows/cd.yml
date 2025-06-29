@@ -1,4 +1,5 @@
-name: CD Pipeline
+# .github/workflows/cd.yml
+name: Docker Deploy CD
 
 on:
   workflow_run:
@@ -7,13 +8,30 @@ on:
       - completed
 
 jobs:
-  build:
-    runs-on: self-hosted
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: [self-hosted, ec2]
 
     steps:
-      - name: Pull Docker image
-        run: sudo docker pull smw0807/pubg-api:1.0.1
-      - name: Delete Old docker container
-        run: sudo docker rm -f pubg-api-container || true
-      - name: Run Docker Container
-        run: sudo docker run --env-file /home/ubuntu/my-app/.env -d -p 8080:8080 --name pubg-api-container smw0807/pubg-api:1.0.1
+      - name: DockerHub Login
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - name: Pull latest image
+        run: docker pull smw0807/pubg-api:1.0.0
+
+      - name: Stop and remove old container
+        run: |
+          docker stop nest-backend || true
+          docker rm nest-backend || true
+
+      - name: Run new container
+        run: |
+          docker run -d \
+            --name nest-backend \
+            --env-file /home/ubuntu/app/.env \
+            --restart always \
+            -p 3000:3000 \
+            smw0807/pubg-api:1.0.0
