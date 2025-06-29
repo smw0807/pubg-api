@@ -24,13 +24,13 @@ jobs:
 
       - name: Stop and remove old container
         run: |
-          docker stop nest-backend || true
-          docker rm nest-backend || true
+          docker stop pubg-api || true
+          docker rm pubg-api || true
 
       - name: Run new container
         run: |
           docker run -d \
-            --name nest-backend \
+            --name pubg-api \
             --env-file /home/ubuntu/app/.env \
             --restart always \
             -p 3000:3000 \
