@@ -1,9 +1,9 @@
 # .github/workflows/cd.yml
-name: Docker Deploy CD
+name: CD
 
 on:
   workflow_run:
-    workflows: ['Docker Image CI']
+    workflows: ['CI']
     types:
       - completed
 
