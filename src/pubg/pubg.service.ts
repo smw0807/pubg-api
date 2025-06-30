@@ -58,6 +58,7 @@ export class PubgService {
       return response.data;
     } catch (e) {
       if (e instanceof Error) {
+        this.logger.error('PubgService.req()', e.message);
         // players 조회 시 404 에러 발생 시 에러 문구 변경
         if (requestUrl.includes('players') && e.message.includes('404')) {
           throw new HttpException(
