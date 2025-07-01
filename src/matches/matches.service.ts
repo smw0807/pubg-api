@@ -1,10 +1,11 @@
 import { PlatformType } from '@/constants/platform';
 import { PubgService } from '@/pubg/pubg.service';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { MatchResponse, Participant, Roster } from '@/models/matches';
 
 @Injectable()
 export class MatchesService {
+  private readonly logger = new Logger(MatchesService.name);
   constructor(private readonly pubgService: PubgService) {}
 
   async getMatches(platform: PlatformType, matchId: string) {
@@ -208,10 +209,16 @@ export class MatchesService {
     );
 
     if (!player) {
-      throw new Error(`Player ${playerName} not found in this match`);
+      this.logger.error(
+        `Player ${playerName} not found in this match : ${matchId}`,
+      );
+      return null;
     }
     if (!roster) {
-      throw new Error(`Player ${playerName} not found in this match`);
+      this.logger.error(
+        `Player ${playerName} not found in this match : ${matchId}`,
+      );
+      return null;
     }
 
     const stats = player.attributes.stats;
