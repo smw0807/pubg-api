@@ -21,6 +21,7 @@ export class StatsService {
     // 닉네임으로 플레이어 아이디 구하기
     const player = await this.playersService.getPlayers(platform, playerName);
     const playerId = player.id;
+    const banType = player.attributes.banType;
 
     // 현재 시즌 아이디 구하기
     const season = await this.seasonsService.getCurrentSeason(platform);
@@ -42,6 +43,7 @@ export class StatsService {
       all: allStats,
       squad: squadStats,
       squadFpp: squadFppStats,
+      banType,
     };
   }
 
@@ -50,6 +52,7 @@ export class StatsService {
     // 닉네임으로 플레이어 아이디 구하기
     const player = await this.playersService.getPlayers(platform, playerName);
     const playerId = player.id;
+    const banType = player.attributes.banType;
 
     // 현재 시즌 아이디 구하기
     const season = await this.seasonsService.getCurrentSeason(platform);
@@ -76,6 +79,7 @@ export class StatsService {
       soloFpp: soloFppStats,
       squad: squadStats,
       squadFpp: squadFppStats,
+      banType,
     };
   }
 

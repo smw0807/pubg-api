@@ -10,7 +10,14 @@ import { StatsModule } from './stats/stats.module';
 import { MatchesModule } from './matches/matches.module';
 
 @Module({
-  imports: [ConfigModule, PlayersModule, PubgModule, SeasonsModule, StatsModule, MatchesModule],
+  imports: [
+    ConfigModule,
+    PlayersModule,
+    PubgModule,
+    SeasonsModule,
+    StatsModule,
+    MatchesModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

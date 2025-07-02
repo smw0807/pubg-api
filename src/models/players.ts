@@ -25,7 +25,7 @@ export interface PlayerAttributes {
   createdAt: string;
   updatedAt: string;
   patchVersion: string;
-  banType: string;
+  banType: 'Innocent' | 'TemporaryBan' | 'PermanentBan'; // 무죄, 임시정지, 영구정지
   titleId: string;
 }
 
