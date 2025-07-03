@@ -229,6 +229,7 @@ export class MatchesService {
       matchId: matchData.data.id,
       gameMode: matchData.data.attributes.gameMode,
       mapName: matchData.data.attributes.mapName,
+      matchDate: matchData.data.attributes.createdAt,
       performance: {
         kills: stats.kills,
         assists: stats.assists,
