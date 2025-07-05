@@ -9,6 +9,7 @@ import { SeasonsModule } from './seasons/seasons.module';
 import { StatsModule } from './stats/stats.module';
 import { MatchesModule } from './matches/matches.module';
 import { TelemetryModule } from './telemetry/telemetry.module';
+import { LifetimeModule } from './lifetime/lifetime.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { TelemetryModule } from './telemetry/telemetry.module';
     StatsModule,
     MatchesModule,
     TelemetryModule,
+    LifetimeModule,
   ],
   controllers: [AppController],
   providers: [AppService],
