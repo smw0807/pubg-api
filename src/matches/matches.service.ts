@@ -8,21 +8,21 @@ export class MatchesService {
   private readonly logger = new Logger(MatchesService.name);
   constructor(private readonly pubgService: PubgService) {}
 
-  async getMatches(platform: PlatformType, matchId: string) {
+  async getMatches(
+    platform: PlatformType,
+    matchId: string,
+  ): Promise<MatchResponse> {
     const requestUrl = `matches/${matchId}`;
     const matches = await this.pubgService.GET({
       platform,
       requestUrl,
     });
-    return matches;
+    return matches as MatchResponse;
   }
 
   // 매치 요약 정보 반환
   async getMatchSummary(platform: PlatformType, matchId: string) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
 
     const participants = this.getParticipants(matchData);
     const rosters = this.getRosters(matchData);
@@ -59,10 +59,7 @@ export class MatchesService {
 
   // 팀별 순위 정보 반환
   async getTeamRankings(platform: PlatformType, matchId: string) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
     const rosters = this.getRosters(matchData);
     const participants = this.getParticipants(matchData);
 
@@ -90,10 +87,7 @@ export class MatchesService {
 
   // 플레이어별 상세 통계 반환
   async getPlayerStats(platform: PlatformType, matchId: string) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
     return participants
@@ -133,10 +127,7 @@ export class MatchesService {
 
   // 킬 순위별 정렬
   async getKillLeaderboard(platform: PlatformType, matchId: string) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
     return participants
@@ -153,10 +144,7 @@ export class MatchesService {
 
   // 데미지 순위별 정렬
   async getDamageLeaderboard(platform: PlatformType, matchId: string) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
     return participants
@@ -172,10 +160,7 @@ export class MatchesService {
 
   // 생존 시간 순위별 정렬
   async getSurvivalLeaderboard(platform: PlatformType, matchId: string) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
     return participants
@@ -195,10 +180,7 @@ export class MatchesService {
     matchId: string,
     playerName: string,
   ) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
     const player = participants.find(
@@ -327,10 +309,7 @@ export class MatchesService {
 
   // 팀별 상세 분석
   async getTeamAnalysis(platform: PlatformType, matchId: string) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
     const rosters = this.getRosters(matchData);
     const participants = this.getParticipants(matchData);
 
@@ -395,10 +374,7 @@ export class MatchesService {
 
   // 플레이어 성과 분석 (KDA, 효율성 등)
   async getPlayerPerformanceAnalysis(platform: PlatformType, matchId: string) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
     return participants
@@ -458,10 +434,7 @@ export class MatchesService {
 
   // 매치 통계 요약
   async getMatchStatistics(platform: PlatformType, matchId: string) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
     const rosters = this.getRosters(matchData);
 
@@ -537,10 +510,7 @@ export class MatchesService {
     matchId: string,
     searchTerm: string,
   ) {
-    const matchData = (await this.getMatches(
-      platform,
-      matchId,
-    )) as MatchResponse;
+    const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
     const filteredPlayers = participants.filter(participant =>

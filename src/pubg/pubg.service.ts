@@ -3,12 +3,14 @@ import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
+import { STATUS_CODES } from '@/constants/status.code';
 
 @Injectable()
 export class PubgService {
   private readonly logger = new Logger(PubgService.name);
   private readonly apiUrl: string;
   private readonly apiKey: string;
+  private readonly telemetryApiUrl: string;
 
   constructor(
     private readonly httpService: HttpService,
@@ -16,6 +18,8 @@ export class PubgService {
   ) {
     this.apiUrl = this.configService.get<string>('pubg.apiUrl') ?? '';
     this.apiKey = this.configService.get<string>('pubg.apiKey') ?? '';
+    this.telemetryApiUrl =
+      this.configService.get<string>('pubg.telemetryApiUrl') ?? '';
   }
 
   async GET<T>({
@@ -93,6 +97,43 @@ export class PubgService {
       }
       throw new HttpException(
         'API 요청에 실패했습니다.',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async GETTelemetry<T>({
+    matchDate,
+    matchId,
+  }: {
+    matchDate: string;
+    matchId: string;
+  }): Promise<T> {
+    try {
+      const url = `${this.telemetryApiUrl}/pc-krjp/${matchDate}/${matchId}-telemetry.json`;
+      this.logger.log(
+        {
+          method: 'GET',
+          url,
+        },
+        'PubgService.GETTelemetry()',
+      );
+      const response = await firstValueFrom(
+        this.httpService.request<T>({
+          url,
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${this.apiKey}`,
+            accept: 'application/vnd.api+json',
+          },
+        }),
+      );
+      return response.data;
+    } catch (e) {
+      this.logger.error(e.status);
+      this.logger.error(e.message);
+      throw new HttpException(
+        STATUS_CODES[e.status],
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

@@ -8,6 +8,7 @@ import { PubgModule } from './pubg/pubg.module';
 import { SeasonsModule } from './seasons/seasons.module';
 import { StatsModule } from './stats/stats.module';
 import { MatchesModule } from './matches/matches.module';
+import { TelemetryModule } from './telemetry/telemetry.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MatchesModule } from './matches/matches.module';
     SeasonsModule,
     StatsModule,
     MatchesModule,
+    TelemetryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
