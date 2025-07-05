@@ -9,6 +9,7 @@ export const validationSchema = Joi.object({
   // PUBG API
   PUBG_API_URL: Joi.string().required(),
   PUBG_API_KEY: Joi.string().required(),
+  PUBG_TELEMETRY_API_URL: Joi.string().required(),
   // CORS
   CORS_ORIGIN: Joi.string().required(),
   CORS_METHODS: Joi.string().required(),
