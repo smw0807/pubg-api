@@ -8,7 +8,10 @@ export class TelemetryController {
   constructor(private readonly telemetryService: TelemetryService) {}
 
   @Get('match/:matchId')
-  @ApiOperation({ summary: 'Telemetry 정보 조회' })
+  @ApiOperation({
+    summary: 'Telemetry 정보 조회',
+    description: '현재 미완성된 기능입니다.',
+  })
   @ApiQuery({
     name: 'platform',
     description: '플랫폼 타입',
