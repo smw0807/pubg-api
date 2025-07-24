@@ -40,6 +40,7 @@ export interface GameModeStats {
 // 랭크 게임 모드 통계 타입
 export interface RankedGameModeStats {
   All: GameModeStats;
+  duo: GameModeStats;
   squad: GameModeStats;
   'squad-fpp': GameModeStats;
 }

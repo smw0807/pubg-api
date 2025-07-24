@@ -35,12 +35,14 @@ export class StatsService {
     });
 
     const allStats = stats.data.attributes.rankedGameModeStats.All;
+    const duoStats = stats.data.attributes.rankedGameModeStats.duo;
     const squadStats = stats.data.attributes.rankedGameModeStats.squad;
     const squadFppStats =
       stats.data.attributes.rankedGameModeStats['squad-fpp'];
 
     return {
       all: allStats,
+      duo: duoStats,
       squad: squadStats,
       squadFpp: squadFppStats,
       banType,
