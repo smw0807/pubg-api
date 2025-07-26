@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { LifetimeService } from './lifetime.service';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { PlatformType } from '@/constants/platform';
 
 @Controller('lifetime')
 export class LifetimeController {
@@ -9,7 +10,14 @@ export class LifetimeController {
   @Get('stats')
   @ApiOperation({
     summary: '라이프타임 스탯 조회',
-    description: '현재 미완성된 기능입니다.',
+    description: '모든 시즌 통틀어서 라이프타임 스탯을 조회합니다.',
+  })
+  @ApiQuery({
+    name: 'platform',
+    description: '플랫폼 타입',
+    enum: ['steam', 'kakao'],
+    example: 'kakao',
+    required: true,
   })
   @ApiQuery({
     name: 'accountId',
@@ -17,7 +25,10 @@ export class LifetimeController {
     example: 'account.1234567890',
     required: true,
   })
-  async getLifetimeStats(@Query('accountId') accountId: string) {
-    return this.lifetimeService.getLifetimeStats(accountId);
+  async getLifetimeStats(
+    @Query('platform') platform: PlatformType,
+    @Query('accountId') accountId: string,
+  ) {
+    return this.lifetimeService.getLifetimeStats(platform, accountId);
   }
 }
