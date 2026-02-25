@@ -40,6 +40,7 @@ export class RankStatsResponseDto {
         rank: 1250,
         subRank: 0,
         roundsPlayed: 50,
+        avgKill: 15.5,
         avgRank: 15.5,
         top10Ratio: 0.3,
         winRatio: 0.05,
@@ -70,6 +71,7 @@ export class RankStatsResponseDto {
       rank: number;
       subRank: number;
       roundsPlayed: number;
+      avgKill: number;
       avgRank: number;
       top10Ratio: number;
       winRatio: number;

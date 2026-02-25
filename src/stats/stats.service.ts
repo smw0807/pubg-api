@@ -14,7 +14,7 @@ export class StatsService {
     private readonly playersService: PlayersService,
     private readonly seasonsService: SeasonsService,
     private readonly matchesService: MatchesService,
-  ) {}
+  ) { }
 
   // 랭크 스탯 조회
   async getRankStats(platform: PlatformType, playerName: string) {
@@ -33,6 +33,7 @@ export class StatsService {
       platform,
       requestUrl,
     });
+    console.log(stats);
 
     const allStats = stats.data.attributes.rankedGameModeStats.All;
     const duoStats = stats.data.attributes.rankedGameModeStats.duo;
