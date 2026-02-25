@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+import { CacheModule } from '@nestjs/cache-manager';
 import { ConfigModule } from '@config/config.module';
 import { PlayersModule } from './players/players.module';
 import { PubgModule } from './pubg/pubg.module';
@@ -13,6 +14,7 @@ import { LifetimeModule } from './lifetime/lifetime.module';
 
 @Module({
   imports: [
+    CacheModule.register({ isGlobal: true }),
     ConfigModule,
     PlayersModule,
     PubgModule,

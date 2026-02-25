@@ -1,9 +1,30 @@
 import { PlatformType } from '@/constants/platform';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { HttpService } from '@nestjs/axios';
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Cache } from 'cache-manager';
 import { firstValueFrom } from 'rxjs';
 import { STATUS_CODES } from '@/constants/status.code';
+
+// 데이터 유형별 캐시 TTL (밀리초)
+const CACHE_TTL = {
+  MATCH: 24 * 60 * 60 * 1000,  // 24시간 - 매치 데이터는 불변
+  SEASON: 60 * 60 * 1000,       // 1시간  - 시즌은 거의 변경 없음
+  DEFAULT: 5 * 60 * 1000,       // 5분    - 플레이어/스탯 등
+} as const;
+
+function getTtl(requestUrl: string): number {
+  if (/^matches\//.test(requestUrl)) return CACHE_TTL.MATCH;
+  if (requestUrl.startsWith('seasons')) return CACHE_TTL.SEASON;
+  return CACHE_TTL.DEFAULT;
+}
 
 @Injectable()
 export class PubgService {
@@ -15,6 +36,7 @@ export class PubgService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
   ) {
     this.apiUrl = this.configService.get<string>('pubg.apiUrl') ?? '';
     this.apiKey = this.configService.get<string>('pubg.apiKey') ?? '';
@@ -31,6 +53,13 @@ export class PubgService {
   }): Promise<T> {
     if (!this.apiKey || !this.apiUrl) {
       throw new Error('API key or base URL is not set');
+    }
+
+    const cacheKey = platform ? `${platform}:${requestUrl}` : requestUrl;
+    const cached = await this.cacheManager.get<T>(cacheKey);
+    if (cached) {
+      this.logger.debug(`Cache hit: ${cacheKey}`);
+      return cached;
     }
 
     try {
@@ -58,6 +87,9 @@ export class PubgService {
       if (!response) {
         throw new Error('No response received');
       }
+
+      const ttl = getTtl(requestUrl);
+      await this.cacheManager.set(cacheKey, response.data, ttl);
 
       return response.data;
     } catch (e) {
