@@ -18,13 +18,14 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
-      - name: Pull latest image
-        run: docker pull smw0807/pubg-api:1.0.0
-
       - name: Stop and remove old container
         run: |
           docker stop pubg-api || true
           docker rm pubg-api || true
+          docker rmi smw0807/pubg-api:1.0.0 || true
+
+      - name: Pull latest image
+        run: docker pull smw0807/pubg-api:1.0.0
 
       - name: Run new container
         run: |
