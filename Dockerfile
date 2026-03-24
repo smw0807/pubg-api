@@ -23,12 +23,10 @@ FROM node:22-alpine AS production
 WORKDIR /usr/src/app
 
 # Copy package files
-COPY package*.json yarn.lock ./
+COPY package*.json ./
 
-# Install only production dependencies
-RUN yarn install --frozen-lockfile --production && yarn cache clean
-
-# Copy built application from builder stage
+# Copy node_modules and built application from builder stage
+COPY --from=builder /usr/src/app/node_modules ./node_modules
 COPY --from=builder /usr/src/app/dist ./dist
 
 # Expose port
