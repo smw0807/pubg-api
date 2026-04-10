@@ -42,7 +42,8 @@ export class TelemetryController {
   @Get('kills')
   @ApiOperation({
     summary: '킬 로그 조회',
-    description: '매치에서 발생한 킬 이벤트 목록을 조회합니다.',
+    description:
+      '매치에서 발생한 킬 이벤트 목록을 조회합니다. playerName을 지정하면 해당 플레이어가 킬하거나 사망한 이벤트만 반환합니다.',
   })
   @ApiQuery({
     name: 'platform',
@@ -55,17 +56,25 @@ export class TelemetryController {
     description: '매치 ID',
     example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
   })
+  @ApiQuery({
+    name: 'playerName',
+    description: '플레이어 이름 (생략 시 전체)',
+    required: false,
+    example: 'PlayerName123',
+  })
   async getKillLog(
     @Query('platform') platform: PlatformType,
     @Query('matchId') matchId: string,
+    @Query('playerName') playerName?: string,
   ) {
-    return this.telemetryService.getKillLog(platform, matchId);
+    return this.telemetryService.getKillLog(platform, matchId, playerName);
   }
 
   @Get('groggy')
   @ApiOperation({
     summary: '기절(DBNO) 로그 조회',
-    description: '매치에서 발생한 기절(다운) 이벤트 목록을 조회합니다.',
+    description:
+      '매치에서 발생한 기절(다운) 이벤트 목록을 조회합니다. playerName을 지정하면 해당 플레이어가 기절시키거나 기절당한 이벤트만 반환합니다.',
   })
   @ApiQuery({
     name: 'platform',
@@ -78,11 +87,18 @@ export class TelemetryController {
     description: '매치 ID',
     example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
   })
+  @ApiQuery({
+    name: 'playerName',
+    description: '플레이어 이름 (생략 시 전체)',
+    required: false,
+    example: 'PlayerName123',
+  })
   async getGroggyLog(
     @Query('platform') platform: PlatformType,
     @Query('matchId') matchId: string,
+    @Query('playerName') playerName?: string,
   ) {
-    return this.telemetryService.getGroggyLog(platform, matchId);
+    return this.telemetryService.getGroggyLog(platform, matchId, playerName);
   }
 
   @Get('damage')

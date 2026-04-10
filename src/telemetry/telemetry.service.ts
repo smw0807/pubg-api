@@ -70,11 +70,25 @@ export class TelemetryService {
     }));
   }
 
-  async getKillLog(platform: PlatformType, matchId: string) {
+  async getKillLog(
+    platform: PlatformType,
+    matchId: string,
+    playerName?: string,
+  ) {
     const events = await this.fetchTelemetry(platform, matchId);
+    let kills = events.filter(
+      (e): e is LogPlayerKillV2 => e._T === 'LogPlayerKillV2',
+    );
 
-    return events
-      .filter((e): e is LogPlayerKillV2 => e._T === 'LogPlayerKillV2')
+    if (playerName) {
+      kills = kills.filter(
+        e =>
+          e.victim.name.toLowerCase() === playerName.toLowerCase() ||
+          e.killer?.name.toLowerCase() === playerName.toLowerCase(),
+      );
+    }
+
+    return kills
       .map(e => ({
         timestamp: e._D,
         killer: e.killer
@@ -99,11 +113,25 @@ export class TelemetryService {
       }));
   }
 
-  async getGroggyLog(platform: PlatformType, matchId: string) {
+  async getGroggyLog(
+    platform: PlatformType,
+    matchId: string,
+    playerName?: string,
+  ) {
     const events = await this.fetchTelemetry(platform, matchId);
+    let groggies = events.filter(
+      (e): e is LogPlayerMakeGroggy => e._T === 'LogPlayerMakeGroggy',
+    );
 
-    return events
-      .filter((e): e is LogPlayerMakeGroggy => e._T === 'LogPlayerMakeGroggy')
+    if (playerName) {
+      groggies = groggies.filter(
+        e =>
+          e.victim.name.toLowerCase() === playerName.toLowerCase() ||
+          e.attacker?.name.toLowerCase() === playerName.toLowerCase(),
+      );
+    }
+
+    return groggies
       .map(e => ({
         timestamp: e._D,
         attacker: e.attacker
