@@ -11,7 +11,6 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Cache } from 'cache-manager';
 import { firstValueFrom } from 'rxjs';
-import { STATUS_CODES } from '@/constants/status.code';
 
 // 데이터 유형별 캐시 TTL (밀리초)
 const CACHE_TTL = {
@@ -31,7 +30,6 @@ export class PubgService {
   private readonly logger = new Logger(PubgService.name);
   private readonly apiUrl: string;
   private readonly apiKey: string;
-  private readonly telemetryApiUrl: string;
 
   constructor(
     private readonly httpService: HttpService,
@@ -40,8 +38,6 @@ export class PubgService {
   ) {
     this.apiUrl = this.configService.get<string>('pubg.apiUrl') ?? '';
     this.apiKey = this.configService.get<string>('pubg.apiKey') ?? '';
-    this.telemetryApiUrl =
-      this.configService.get<string>('pubg.telemetryApiUrl') ?? '';
   }
 
   async GET<T>({
@@ -134,15 +130,15 @@ export class PubgService {
     }
   }
 
-  async GETTelemetry<T>({
-    matchDate,
-    matchId,
-  }: {
-    matchDate: string;
-    matchId: string;
-  }): Promise<T> {
+  async GETTelemetry<T>(url: string): Promise<T> {
+    const cacheKey = `telemetry:${url}`;
+    const cached = await this.cacheManager.get<T>(cacheKey);
+    if (cached) {
+      this.logger.debug(`Cache hit: ${cacheKey}`);
+      return cached;
+    }
+
     try {
-      const url = `${this.telemetryApiUrl}/pc-krjp/${matchDate}/${matchId}-telemetry.json`;
       this.logger.log(
         {
           method: 'GET',
@@ -155,17 +151,18 @@ export class PubgService {
           url,
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${this.apiKey}`,
             accept: 'application/vnd.api+json',
           },
         }),
       );
+
+      await this.cacheManager.set(cacheKey, response.data, CACHE_TTL.MATCH);
       return response.data;
     } catch (e) {
       this.logger.error(e.status);
       this.logger.error(e.message);
       throw new HttpException(
-        STATUS_CODES[e.status],
+        '텔레메트리 데이터를 가져오는데 실패했습니다.',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
