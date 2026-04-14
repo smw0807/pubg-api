@@ -62,13 +62,13 @@ export class PubgService {
       const url = platform
         ? `${this.apiUrl}/${platform}/${requestUrl}`
         : `${this.apiUrl}/${requestUrl}`;
-      this.logger.log(
-        {
-          method: 'GET',
-          url,
-        },
-        'PubgService.req()',
-      );
+      // this.logger.log(
+      //   {
+      //     method: 'GET',
+      //     url,
+      //   },
+      //   'PubgService.req()',
+      // );
       const response = (await firstValueFrom(
         this.httpService.request<T>({
           url,
