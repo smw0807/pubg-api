@@ -33,7 +33,6 @@ export class StatsService {
       platform,
       requestUrl,
     });
-    console.log(stats);
 
     const allStats = stats.data.attributes.rankedGameModeStats.All;
     const duoStats = stats.data.attributes.rankedGameModeStats.duo;
