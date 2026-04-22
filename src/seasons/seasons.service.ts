@@ -15,7 +15,8 @@ export class SeasonsService {
 
   // 현재 시즌 조회
   async getCurrentSeason(platform: PlatformType): Promise<Season> {
-    const currentSeason = await this.getSeasons(platform).then(seasons => seasons.filter(item => item.attributes.isCurrentSeason)[0]);
+    const getSeasons = await this.getSeasons(platform);
+    const currentSeason = getSeasons.filter(item => item.attributes.isCurrentSeason)
     return currentSeason[0];
   }
 }

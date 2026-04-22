@@ -6,14 +6,13 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { PlayersService } from './players.service';
-import { PlayerDataItem } from '@/models/players';
 import { PlatformType } from '@/constants/platform';
 import { PlayerDataResponseDto } from './dto/players.dto';
-
+import type { Player } from 'pubg-kit'
 @ApiTags('players')
 @Controller('players')
 export class PlayersController {
-  constructor(private readonly playersService: PlayersService) {}
+  constructor(private readonly playersService: PlayersService) { }
 
   @Get()
   @ApiOperation({
@@ -40,7 +39,7 @@ export class PlayersController {
   async getPlayers(
     @Query('platform') platform: PlatformType,
     @Query('playerName') playerName: string,
-  ): Promise<PlayerDataItem> {
+  ): Promise<Player> {
     return this.playersService.getPlayers(platform, playerName);
   }
 }

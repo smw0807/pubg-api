@@ -1,19 +1,16 @@
-import { PubgService } from '@pubg/pubg.service';
+import { PubgService } from 'pubg-kit/nestjs';
 import { Injectable } from '@nestjs/common';
-import { Player, PlayerDataItem } from '@models/players';
 import { PlatformType } from '@constants/platform';
+import type { Player } from 'pubg-kit'
 @Injectable()
 export class PlayersService {
-  constructor(private readonly pubgService: PubgService) {}
+  constructor(private readonly pubgService: PubgService) { }
 
   async getPlayers(
     platform: PlatformType,
     playerName: string,
-  ): Promise<PlayerDataItem> {
-    const response = await this.pubgService.GET<Player>({
-      platform,
-      requestUrl: `players?filter[playerNames]=${playerName}`,
-    });
-    return response.data[0];
+  ): Promise<Player> {
+    const response = await this.pubgService.shard(platform).players.getByNames([playerName]);
+    return response[0];
   }
 }
