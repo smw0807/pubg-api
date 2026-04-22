@@ -1,27 +1,21 @@
-import { PubgService } from '@/pubg/pubg.service';
-import { Injectable } from '@nestjs/common';
-import { Season, SeasonData } from '@models/seasons';
+import { Injectable } from '@nestjs/common';;
 import { PlatformType } from '@constants/platform';
-
+import { PubgService } from 'pubg-kit/nestjs';
+import type { Season } from 'pubg-kit'
 @Injectable()
 export class SeasonsService {
-  constructor(private readonly pubgService: PubgService) {}
+  constructor(private readonly pubgService: PubgService) { }
 
   // 시즌 조회
-  async getSeasons(platform: PlatformType): Promise<SeasonData[]> {
-    const response = await this.pubgService.GET<Season>({
-      platform,
-      requestUrl: 'seasons',
-    });
-    return response.data;
+  async getSeasons(platform: PlatformType): Promise<Season[]> {
+    const seasons = await this.pubgService.shard(platform).seasons.getAll();
+    return seasons;
+
   }
 
   // 현재 시즌 조회
-  async getCurrentSeason(platform: PlatformType): Promise<SeasonData> {
-    const response = await this.pubgService.GET<Season>({
-      platform,
-      requestUrl: 'seasons',
-    });
-    return response.data.filter(item => item.attributes.isCurrentSeason)[0];
+  async getCurrentSeason(platform: PlatformType): Promise<Season> {
+    const currentSeason = await this.getSeasons(platform).then(seasons => seasons.filter(item => item.attributes.isCurrentSeason)[0]);
+    return currentSeason[0];
   }
 }
