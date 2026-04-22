@@ -18,7 +18,7 @@ export class TelemetryService {
   constructor(
     private readonly pubgService: PubgService,
     private readonly matchesService: MatchesService,
-  ) {}
+  ) { }
 
   private async fetchTelemetry(
     platform: PlatformType,
@@ -26,7 +26,7 @@ export class TelemetryService {
   ): Promise<TelemetryEvent[]> {
     const match = await this.matchesService.getMatches(platform, matchId);
 
-    const asset = match.included.find(
+    const asset = match.included?.find(
       (item): item is Asset => item.type === 'asset',
     );
 
@@ -93,11 +93,11 @@ export class TelemetryService {
         timestamp: e._D,
         killer: e.killer
           ? {
-              name: e.killer.name,
-              teamId: e.killer.teamId,
-              location: e.killer.location,
-              health: e.killer.health,
-            }
+            name: e.killer.name,
+            teamId: e.killer.teamId,
+            location: e.killer.location,
+            health: e.killer.health,
+          }
           : null,
         victim: {
           name: e.victim.name,
@@ -136,10 +136,10 @@ export class TelemetryService {
         timestamp: e._D,
         attacker: e.attacker
           ? {
-              name: e.attacker.name,
-              teamId: e.attacker.teamId,
-              location: e.attacker.location,
-            }
+            name: e.attacker.name,
+            teamId: e.attacker.teamId,
+            location: e.attacker.location,
+          }
           : null,
         victim: {
           name: e.victim.name,
@@ -176,10 +176,10 @@ export class TelemetryService {
       timestamp: e._D,
       attacker: e.attacker
         ? {
-            name: e.attacker.name,
-            teamId: e.attacker.teamId,
-            location: e.attacker.location,
-          }
+          name: e.attacker.name,
+          teamId: e.attacker.teamId,
+          location: e.attacker.location,
+        }
         : null,
       victim: {
         name: e.victim.name,

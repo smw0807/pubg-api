@@ -4,6 +4,7 @@ import { MatchesService } from '@/matches/matches.service';
 import { PlayersService } from '@/players/players.service';
 import { SeasonsService } from '@/seasons/seasons.service';
 import { Injectable } from '@nestjs/common';
+import type { PlatformShard } from 'pubg-kit'
 @Injectable()
 export class StatsService {
   constructor(
@@ -14,7 +15,7 @@ export class StatsService {
   ) { }
 
   // 랭크 스탯 조회
-  async getRankStats(platform: PlatformType, playerName: string) {
+  async getRankStats(platform: PlatformShard, playerName: string) {
     // 닉네임으로 플레이어 아이디 구하기
     const player = await this.playersService.getPlayers(platform, playerName);
     const playerId = player.id;
@@ -41,7 +42,7 @@ export class StatsService {
   }
 
   // 노말 스탯 조회
-  async getNormalStats(platform: PlatformType, playerName: string) {
+  async getNormalStats(platform: PlatformShard, playerName: string) {
     // 닉네임으로 플레이어 아이디 구하기
     const player = await this.playersService.getPlayers(platform, playerName);
     const playerId = player.id;
@@ -73,7 +74,7 @@ export class StatsService {
   }
 
   // 최근 매치 스탯 조회
-  async getRecentMatchStats(platform: PlatformType, playerName: string) {
+  async getRecentMatchStats(platform: PlatformShard, playerName: string) {
     // 닉네임으로 플레이어 아이디 구하기
     const player = await this.playersService.getPlayers(platform, playerName);
 

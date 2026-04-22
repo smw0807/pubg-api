@@ -12,11 +12,12 @@ import {
   SeasonsListResponseDto,
   SeasonDataResponseDto,
 } from './dto/seasons.dto';
+import type { PlatformShard } from 'pubg-kit'
 
 @ApiTags('seasons')
 @Controller('seasons')
 export class SeasonsController {
-  constructor(private readonly seasonsService: SeasonsService) {}
+  constructor(private readonly seasonsService: SeasonsService) { }
 
   @Get()
   @ApiOperation({
@@ -34,7 +35,7 @@ export class SeasonsController {
     description: '시즌 목록 조회 성공',
     type: SeasonsListResponseDto,
   })
-  async getSeasons(@Query('platform') platform: PlatformType) {
+  async getSeasons(@Query('platform') platform: PlatformShard) {
     return this.seasonsService.getSeasons(platform);
   }
 
@@ -55,7 +56,7 @@ export class SeasonsController {
     type: SeasonDataResponseDto,
   })
   async getCurrentSeason(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
   ): Promise<SeasonData> {
     return this.seasonsService.getCurrentSeason(platform);
   }

@@ -1,27 +1,22 @@
+import { PubgService } from 'pubg-kit/nestjs';
 import { PlatformType } from '@/constants/platform';
-import { PubgService } from '@/pubg/pubg.service';
 import { Injectable, Logger } from '@nestjs/common';
-import { MatchResponse, Participant, Roster } from '@/models/matches';
-
+import type { PlatformShard, Match, MatchResponse, Participant, Roster } from 'pubg-kit'
 @Injectable()
 export class MatchesService {
   private readonly logger = new Logger(MatchesService.name);
-  constructor(private readonly pubgService: PubgService) {}
+  constructor(private readonly pubgService: PubgService) { }
 
   async getMatches(
-    platform: PlatformType,
+    platform: PlatformShard,
     matchId: string,
   ): Promise<MatchResponse> {
-    const requestUrl = `matches/${matchId}`;
-    const matches = await this.pubgService.GET({
-      platform,
-      requestUrl,
-    });
-    return matches as MatchResponse;
+    const matches = await this.pubgService.shard(platform).matches.get(matchId);
+    return matches;
   }
 
   // 매치 요약 정보 반환
-  async getMatchSummary(platform: PlatformType, matchId: string) {
+  async getMatchSummary(platform: PlatformShard, matchId: string) {
     const matchData = await this.getMatches(platform, matchId);
 
     const participants = this.getParticipants(matchData);
@@ -33,20 +28,20 @@ export class MatchesService {
       mapName: matchData.data.attributes.mapName,
       duration: matchData.data.attributes.duration,
       createdAt: matchData.data.attributes.createdAt,
-      totalPlayers: participants.length,
-      totalTeams: rosters.length,
-      winner: rosters.find(roster => roster.attributes.won === 'true'),
-      topKiller: this.getTopKiller(participants),
+      totalPlayers: participants?.length,
+      totalTeams: rosters?.length,
+      winner: rosters?.find(roster => roster.attributes.won === 'true'),
+      topKiller: this.getTopKiller(participants ?? []),
       matchStats: {
-        totalKills: participants.reduce(
+        totalKills: participants?.reduce(
           (sum, p) => sum + p.attributes.stats.kills,
           0,
         ),
-        totalDamage: participants.reduce(
+        totalDamage: participants?.reduce(
           (sum, p) => sum + p.attributes.stats.damageDealt,
           0,
         ),
-        totalDistance: participants.reduce(
+        totalDistance: participants?.reduce(
           (sum, p) =>
             sum +
             p.attributes.stats.walkDistance +
@@ -58,14 +53,14 @@ export class MatchesService {
   }
 
   // 팀별 순위 정보 반환
-  async getTeamRankings(platform: PlatformType, matchId: string) {
+  async getTeamRankings(platform: PlatformShard, matchId: string) {
     const matchData = await this.getMatches(platform, matchId);
-    const rosters = this.getRosters(matchData);
-    const participants = this.getParticipants(matchData);
+    const rosters = this.getRosters(matchData) ?? [];
+    const participants = this.getParticipants(matchData) ?? [];
 
     return rosters
       .map(roster => {
-        const teamParticipants = this.getTeamParticipants(roster, participants);
+        const teamParticipants = this.getTeamParticipants(roster, participants ?? []);
         const teamStats = this.calculateTeamStats(teamParticipants);
 
         return {
@@ -86,52 +81,51 @@ export class MatchesService {
   }
 
   // 플레이어별 상세 통계 반환
-  async getPlayerStats(platform: PlatformType, matchId: string) {
+  async getPlayerStats(platform: PlatformShard, matchId: string) {
     const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
-    return participants
-      .map(participant => {
-        const stats = participant.attributes.stats;
-        return {
-          name: stats.name,
-          playerId: stats.playerId,
-          kills: stats.kills,
-          assists: stats.assists,
-          damage: stats.damageDealt,
-          headshotKills: stats.headshotKills,
-          survivalTime: stats.timeSurvived,
-          winPlace: stats.winPlace,
-          killPlace: stats.killPlace,
-          distance: {
-            walk: stats.walkDistance,
-            ride: stats.rideDistance,
-            swim: stats.swimDistance,
-            total: stats.walkDistance + stats.rideDistance + stats.swimDistance,
-          },
-          items: {
-            boosts: stats.boosts,
-            heals: stats.heals,
-            weaponsAcquired: stats.weaponsAcquired,
-          },
-          performance: {
-            killStreaks: stats.killStreaks,
-            longestKill: stats.longestKill,
-            revives: stats.revives,
-            DBNOs: stats.DBNOs,
-          },
-        };
-      })
+    return participants?.map(participant => {
+      const stats = participant.attributes.stats;
+      return {
+        name: stats.name,
+        playerId: stats.playerId,
+        kills: stats.kills,
+        assists: stats.assists,
+        damage: stats.damageDealt,
+        headshotKills: stats.headshotKills,
+        survivalTime: stats.timeSurvived,
+        winPlace: stats.winPlace,
+        killPlace: stats.killPlace,
+        distance: {
+          walk: stats.walkDistance,
+          ride: stats.rideDistance,
+          swim: stats.swimDistance,
+          total: stats.walkDistance + stats.rideDistance + stats.swimDistance,
+        },
+        items: {
+          boosts: stats.boosts,
+          heals: stats.heals,
+          weaponsAcquired: stats.weaponsAcquired,
+        },
+        performance: {
+          killStreaks: stats.killStreaks,
+          longestKill: stats.longestKill,
+          revives: stats.revives,
+          DBNOs: stats.DBNOs,
+        },
+      };
+    })
       .sort((a, b) => a.winPlace - b.winPlace);
   }
 
   // 킬 순위별 정렬
-  async getKillLeaderboard(platform: PlatformType, matchId: string) {
+  async getKillLeaderboard(platform: PlatformShard, matchId: string) {
     const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
     return participants
-      .map(participant => ({
+      ?.map(participant => ({
         name: participant.attributes.stats.name,
         kills: participant.attributes.stats.kills,
         damage: participant.attributes.stats.damageDealt,
@@ -143,12 +137,12 @@ export class MatchesService {
   }
 
   // 데미지 순위별 정렬
-  async getDamageLeaderboard(platform: PlatformType, matchId: string) {
+  async getDamageLeaderboard(platform: PlatformShard, matchId: string) {
     const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
     return participants
-      .map(participant => ({
+      ?.map(participant => ({
         name: participant.attributes.stats.name,
         damage: participant.attributes.stats.damageDealt,
         kills: participant.attributes.stats.kills,
@@ -159,12 +153,12 @@ export class MatchesService {
   }
 
   // 생존 시간 순위별 정렬
-  async getSurvivalLeaderboard(platform: PlatformType, matchId: string) {
+  async getSurvivalLeaderboard(platform: PlatformShard, matchId: string) {
     const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
     return participants
-      .map(participant => ({
+      ?.map(participant => ({
         name: participant.attributes.stats.name,
         survivalTime: participant.attributes.stats.timeSurvived,
         winPlace: participant.attributes.stats.winPlace,
@@ -176,17 +170,17 @@ export class MatchesService {
 
   // 특정 플레이어의 매치 통계
   async getPlayerMatchStats(
-    platform: PlatformType,
+    platform: PlatformShard,
     matchId: string,
     playerName: string,
   ) {
     const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
-    const player = participants.find(
+    const player = participants?.find(
       p => p.attributes.stats.name.toLowerCase() === playerName.toLowerCase(),
     );
-    const roster = this.getRosters(matchData).find(r =>
+    const roster = this.getRosters(matchData)?.find(r =>
       r.relationships.participants.data.some(p => p.id === player?.id),
     );
 
@@ -248,14 +242,14 @@ export class MatchesService {
   }
 
   // 유틸리티 메서드들
-  private getParticipants(matchData: MatchResponse): Participant[] {
-    return matchData.included.filter(
+  private getParticipants(matchData: MatchResponse): Participant[] | undefined {
+    return matchData.included?.filter(
       (item): item is Participant => item.type === 'participant',
     );
   }
 
-  private getRosters(matchData: MatchResponse): Roster[] {
-    return matchData.included.filter(
+  private getRosters(matchData: MatchResponse) {
+    return matchData.data.relationships?.rosters?.data?.filter(
       (item): item is Roster => item.type === 'roster',
     );
   }
@@ -308,14 +302,14 @@ export class MatchesService {
   // 추가 고급 분석 기능들
 
   // 팀별 상세 분석
-  async getTeamAnalysis(platform: PlatformType, matchId: string) {
+  async getTeamAnalysis(platform: PlatformShard, matchId: string) {
     const matchData = await this.getMatches(platform, matchId);
-    const rosters = this.getRosters(matchData);
+    const rosters = this.getRosters(matchData) ?? [];
     const participants = this.getParticipants(matchData);
 
     return rosters
       .map(roster => {
-        const teamParticipants = this.getTeamParticipants(roster, participants);
+        const teamParticipants = this.getTeamParticipants(roster, participants ?? []);
         const teamStats = this.calculateTeamStats(teamParticipants);
 
         // 팀 내 최고 성과자들
@@ -327,14 +321,14 @@ export class MatchesService {
 
         const topDamage = teamParticipants.reduce((top, current) =>
           current.attributes.stats.damageDealt >
-          top.attributes.stats.damageDealt
+            top.attributes.stats.damageDealt
             ? current
             : top,
         );
 
         const topSurvivor = teamParticipants.reduce((top, current) =>
           current.attributes.stats.timeSurvived >
-          top.attributes.stats.timeSurvived
+            top.attributes.stats.timeSurvived
             ? current
             : top,
         );
@@ -373,9 +367,9 @@ export class MatchesService {
   }
 
   // 플레이어 성과 분석 (KDA, 효율성 등)
-  async getPlayerPerformanceAnalysis(platform: PlatformType, matchId: string) {
+  async getPlayerPerformanceAnalysis(platform: PlatformShard, matchId: string) {
     const matchData = await this.getMatches(platform, matchId);
-    const participants = this.getParticipants(matchData);
+    const participants = this.getParticipants(matchData) ?? [];
 
     return participants
       .map(participant => {
@@ -433,9 +427,9 @@ export class MatchesService {
   }
 
   // 매치 통계 요약
-  async getMatchStatistics(platform: PlatformType, matchId: string) {
+  async getMatchStatistics(platform: PlatformShard, matchId: string) {
     const matchData = await this.getMatches(platform, matchId);
-    const participants = this.getParticipants(matchData);
+    const participants = this.getParticipants(matchData) ?? [];
     const rosters = this.getRosters(matchData);
 
     const totalKills = participants.reduce(
@@ -472,7 +466,7 @@ export class MatchesService {
       mapName: matchData.data.attributes.mapName,
       duration: matchData.data.attributes.duration,
       playerCount: participants.length,
-      teamCount: rosters.length,
+      teamCount: rosters?.length,
       summary: {
         totalKills,
         totalDamage: Math.round(totalDamage * 100) / 100,
@@ -506,12 +500,12 @@ export class MatchesService {
 
   // 플레이어 검색 및 필터링
   async searchPlayers(
-    platform: PlatformType,
+    platform: PlatformShard,
     matchId: string,
     searchTerm: string,
   ) {
     const matchData = await this.getMatches(platform, matchId);
-    const participants = this.getParticipants(matchData);
+    const participants = this.getParticipants(matchData) ?? [];
 
     const filteredPlayers = participants.filter(participant =>
       participant.attributes.stats.name

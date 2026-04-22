@@ -13,11 +13,11 @@ import {
   PlayerStatsResponseDto,
   TeamRankingResponseDto,
 } from './dto/matches.dto';
-
+import type { PlatformShard } from 'pubg-kit'
 @ApiTags('matches')
 @Controller('matches')
 export class MatchesController {
-  constructor(private readonly matchesService: MatchesService) {}
+  constructor(private readonly matchesService: MatchesService) { }
 
   @Get()
   @ApiOperation({
@@ -40,7 +40,7 @@ export class MatchesController {
     type: Object,
   })
   async getMatches(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
   ) {
     return this.matchesService.getMatches(platform, matchId);
@@ -68,7 +68,7 @@ export class MatchesController {
     type: MatchSummaryResponseDto,
   })
   async getMatchSummary(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
   ) {
     return this.matchesService.getMatchSummary(platform, matchId);
@@ -95,7 +95,7 @@ export class MatchesController {
     type: [TeamRankingResponseDto],
   })
   async getTeamRankings(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
   ) {
     return this.matchesService.getTeamRankings(platform, matchId);
@@ -122,7 +122,7 @@ export class MatchesController {
     type: [PlayerStatsResponseDto],
   })
   async getPlayerStats(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
   ) {
     return this.matchesService.getPlayerStats(platform, matchId);
@@ -150,7 +150,7 @@ export class MatchesController {
     type: [PlayerStatsResponseDto],
   })
   async getKillLeaderboard(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
   ) {
     return this.matchesService.getKillLeaderboard(platform, matchId);
@@ -178,7 +178,7 @@ export class MatchesController {
     type: [PlayerStatsResponseDto],
   })
   async getDamageLeaderboard(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
   ) {
     return this.matchesService.getDamageLeaderboard(platform, matchId);
@@ -206,7 +206,7 @@ export class MatchesController {
     type: [PlayerStatsResponseDto],
   })
   async getSurvivalLeaderboard(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
   ) {
     return this.matchesService.getSurvivalLeaderboard(platform, matchId);
@@ -238,7 +238,7 @@ export class MatchesController {
     type: PlayerStatsResponseDto,
   })
   async getPlayerMatchStats(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
     @Param('playerName') playerName: string,
   ) {
@@ -270,7 +270,7 @@ export class MatchesController {
     type: Object,
   })
   async getTeamAnalysis(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
   ) {
     return this.matchesService.getTeamAnalysis(platform, matchId);
@@ -297,7 +297,7 @@ export class MatchesController {
     type: Object,
   })
   async getPlayerPerformanceAnalysis(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
   ) {
     return this.matchesService.getPlayerPerformanceAnalysis(platform, matchId);
@@ -324,7 +324,7 @@ export class MatchesController {
     type: Object,
   })
   async getMatchStatistics(
-    @Query('platform') platform: PlatformType,
+    @Query('platform') platform: PlatformShard,
     @Query('matchId') matchId: string,
   ) {
     return this.matchesService.getMatchStatistics(platform, matchId);
