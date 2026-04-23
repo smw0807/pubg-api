@@ -1,7 +1,6 @@
 import { PubgService } from 'pubg-kit/nestjs';
-import { PlatformType } from '@/constants/platform';
 import { Injectable, Logger } from '@nestjs/common';
-import type { PlatformShard, Match, MatchResponse, Participant, Roster } from 'pubg-kit'
+import type { PlatformShard, MatchResponse, Participant, Roster } from 'pubg-kit'
 @Injectable()
 export class MatchesService {
   private readonly logger = new Logger(MatchesService.name);
@@ -180,9 +179,6 @@ export class MatchesService {
     const player = participants?.find(
       p => p.attributes.stats.name.toLowerCase() === playerName.toLowerCase(),
     );
-    const roster = this.getRosters(matchData)?.find(r =>
-      r.relationships.participants.data.some(p => p.id === player?.id),
-    );
 
     if (!player) {
       this.logger.error(
@@ -190,6 +186,11 @@ export class MatchesService {
       );
       return null;
     }
+
+    const roster = this.getRosters(matchData)?.find(r =>
+      r.relationships?.participants?.data.some(p => p.id === player?.id),
+    );
+
     if (!roster) {
       this.logger.error(
         `Player ${playerName} not found in this match : ${matchId}`,
@@ -249,7 +250,7 @@ export class MatchesService {
   }
 
   private getRosters(matchData: MatchResponse) {
-    return matchData.data.relationships?.rosters?.data?.filter(
+    return matchData.included?.filter(
       (item): item is Roster => item.type === 'roster',
     );
   }
