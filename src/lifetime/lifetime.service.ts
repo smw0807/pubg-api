@@ -1,16 +1,13 @@
-import { PlatformType } from '@/constants/platform';
-import { PubgService } from '@/pubg/pubg.service';
+import { PubgService } from 'pubg-kit/nestjs';
 import { Injectable } from '@nestjs/common';
+import type { PlatformShard } from 'pubg-kit';
 
 @Injectable()
 export class LifetimeService {
-  constructor(private readonly pubgService: PubgService) {}
+  constructor(private readonly pubgService: PubgService) { }
 
-  async getLifetimeStats(platform: PlatformType, accountId: string) {
-    const requestUrl = `${platform}/players/${accountId}/seasons/lifetime?filter[gamepad]=false`;
-    const stats = await this.pubgService.GET({
-      requestUrl,
-    });
+  async getLifetimeStats(platform: PlatformShard, accountId: string) {
+    const stats = await this.pubgService.shard(platform).seasons.getLifetimeStats(accountId);
     return stats;
   }
 }

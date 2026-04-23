@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { PubgService } from './pubg.service';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@config/config.module';
 import { PubgModule as PubgKitModule } from 'pubg-kit/nestjs'
@@ -13,7 +12,5 @@ import { ConfigService } from '@nestjs/config';
     }),
     inject: [ConfigService],
   })],
-  providers: [PubgService],
-  exports: [PubgService],
 })
 export class PubgModule { }

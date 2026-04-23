@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PubgService } from '@/pubg/pubg.service';
+import { PubgService } from 'pubg-kit/nestjs';
 import { MatchesService } from '@/matches/matches.service';
 import { PlatformType } from '@/constants/platform';
 import { Asset } from '@/models/matches';
@@ -10,6 +10,7 @@ import {
   LogPlayerMakeGroggy,
   LogPlayerTakeDamage,
 } from '@/models/telemetry';
+import type { PlatformShard } from 'pubg-kit';
 
 @Injectable()
 export class TelemetryService {
@@ -21,7 +22,7 @@ export class TelemetryService {
   ) { }
 
   private async fetchTelemetry(
-    platform: PlatformType,
+    platform: PlatformShard,
     matchId: string,
   ): Promise<TelemetryEvent[]> {
     const match = await this.matchesService.getMatches(platform, matchId);
@@ -35,7 +36,7 @@ export class TelemetryService {
       return [];
     }
 
-    return this.pubgService.GETTelemetry<TelemetryEvent[]>(
+    return this.pubgService.shard(platform).telemetry.get(
       asset.attributes.URL,
     );
   }
