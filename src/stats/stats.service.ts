@@ -26,7 +26,7 @@ export class StatsService {
     const seasonId = season.id;
 
     // 현재 시즌 스탯 조회
-    const stats = await this.pubgService.shard(platform).seasons.getPlayerRankedStats(playerId, seasonId);
+    const stats = await this.pubgService.shard(platform).stats.getPlayerRankedStats(playerId, seasonId);
 
     const duoStats = stats.data.attributes.rankedGameModeStats.duo;
     const squadStats = stats.data.attributes.rankedGameModeStats.squad;
@@ -53,7 +53,7 @@ export class StatsService {
     const seasonId = season.id;
 
     // 현재 시즌 스탯 조회
-    const stats = await this.pubgService.shard(platform).seasons.getPlayerStats(playerId, seasonId);
+    const stats = await this.pubgService.shard(platform).stats.getPlayerStats(playerId, seasonId);
 
     const duoStats = stats.data.attributes.gameModeStats.duo;
     const duoFppStats = stats.data.attributes.gameModeStats['duo-fpp'];

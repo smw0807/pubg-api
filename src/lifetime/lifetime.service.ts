@@ -7,7 +7,7 @@ export class LifetimeService {
   constructor(private readonly pubgService: PubgService) { }
 
   async getLifetimeStats(platform: PlatformShard, accountId: string) {
-    const stats = await this.pubgService.shard(platform).seasons.getLifetimeStats(accountId);
+    const stats = await this.pubgService.shard(platform).stats.getLifetimeStats(accountId);
     return stats;
   }
 }
