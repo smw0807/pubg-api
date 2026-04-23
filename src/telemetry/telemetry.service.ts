@@ -1,16 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PubgService } from 'pubg-kit/nestjs';
 import { MatchesService } from '@/matches/matches.service';
-import { PlatformType } from '@/constants/platform';
-import { Asset } from '@/models/matches';
-import {
-  TelemetryEvent,
-  LogPlayerPosition,
-  LogPlayerKillV2,
-  LogPlayerMakeGroggy,
-  LogPlayerTakeDamage,
-} from '@/models/telemetry';
-import type { PlatformShard } from 'pubg-kit';
+import type { PlatformShard, TelemetryEvent, Asset, LogPlayerPosition, LogPlayerKillV2, LogPlayerMakeGroggy, LogPlayerTakeDamage } from 'pubg-kit';
 
 @Injectable()
 export class TelemetryService {
@@ -42,7 +33,7 @@ export class TelemetryService {
   }
 
   async getMovementLog(
-    platform: PlatformType,
+    platform: PlatformShard,
     matchId: string,
     playerName?: string,
   ) {
@@ -72,7 +63,7 @@ export class TelemetryService {
   }
 
   async getKillLog(
-    platform: PlatformType,
+    platform: PlatformShard,
     matchId: string,
     playerName?: string,
   ) {
@@ -115,7 +106,7 @@ export class TelemetryService {
   }
 
   async getGroggyLog(
-    platform: PlatformType,
+    platform: PlatformShard,
     matchId: string,
     playerName?: string,
   ) {
@@ -156,7 +147,7 @@ export class TelemetryService {
   }
 
   async getDamageLog(
-    platform: PlatformType,
+    platform: PlatformShard,
     matchId: string,
     playerName?: string,
   ) {

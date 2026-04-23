@@ -1,6 +1,5 @@
 import { PubgService } from 'pubg-kit/nestjs';
 import { Injectable } from '@nestjs/common';
-import { PlatformType } from '@constants/platform';
 import type { Player } from 'pubg-kit'
 import type { PlatformShard } from 'pubg-kit'
 @Injectable()

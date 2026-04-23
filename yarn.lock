@@ -5127,9 +5127,9 @@ proxy-from-env@^2.1.0:
   integrity sha512-cJ+oHTW1VAEa8cJslgmUZrc+sjRKgAKl3Zyse6+PV38hZe/V6Z14TbCuXcan9F9ghlz4QrFr2c92TNF82UkYHA==
 
 pubg-kit@^1.1.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/pubg-kit/-/pubg-kit-1.3.0.tgz#be753e2ccaf8e256150e8e24e64f1def163f4496"
-  integrity sha512-zKPvu+S/aOGv3L5vGu8jT1yKjb8pu0/eM0Xe2qFl7j79gSHINdhc/+AxTDXEfCaMaiUf0qugTK9VtN64UqieTw==
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/pubg-kit/-/pubg-kit-1.4.0.tgz#7e2c7c378baee92658ddfacde794ce8d29038244"
+  integrity sha512-UE1jmc5Wx7N7p8+CcYGrJYP0K7B/LSj7U75nlD5qXShKfD1FSGvoJ/Z/lQRX0m4lCBDh7tDm+TmbXivp2tOBBQ==
   dependencies:
     axios "^1.7.2"
     lru-cache "^11.0.0"

@@ -6,14 +6,12 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import { SeasonsService } from './seasons.service';
-import { PlatformType } from '@/constants/platform';
-import { SeasonData } from '@/models/seasons';
+
 import {
   SeasonsListResponseDto,
   SeasonDataResponseDto,
 } from './dto/seasons.dto';
-import type { PlatformShard } from 'pubg-kit'
-
+import type { PlatformShard, Season } from 'pubg-kit'
 @ApiTags('seasons')
 @Controller('seasons')
 export class SeasonsController {
@@ -57,7 +55,7 @@ export class SeasonsController {
   })
   async getCurrentSeason(
     @Query('platform') platform: PlatformShard,
-  ): Promise<SeasonData> {
+  ): Promise<Season> {
     return this.seasonsService.getCurrentSeason(platform);
   }
 }
