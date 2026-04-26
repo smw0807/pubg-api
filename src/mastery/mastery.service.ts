@@ -8,11 +8,11 @@ export class MasteryService {
 
   async getWeaponMastery(platform: PlatformShard, accountId: string) {
     const mastery = await this.pubgService.shard(platform).mastery.getWeapon(accountId);
-    return mastery;
+    return mastery.data.attributes;
   }
 
   async getSurvivalMastery(platform: PlatformShard, accountId: string) {
     const mastery = await this.pubgService.shard(platform).mastery.getSurvival(accountId);
-    return mastery;
+    return mastery.data.attributes;
   }
 }
