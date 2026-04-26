@@ -7,7 +7,6 @@ export class MasteryService {
   constructor(private readonly pubgService: PubgService) { }
 
   async getWeaponMastery(platform: PlatformShard, accountId: string) {
-    console.log(accountId);
     const mastery = await this.pubgService.shard(platform).mastery.getWeapon(accountId);
     return mastery;
   }
