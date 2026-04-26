@@ -11,6 +11,7 @@ import { StatsModule } from './stats/stats.module';
 import { MatchesModule } from './matches/matches.module';
 import { TelemetryModule } from './telemetry/telemetry.module';
 import { LifetimeModule } from './lifetime/lifetime.module';
+import { MasteryModule } from './mastery/mastery.module';
 
 @Module({
   imports: [
@@ -23,8 +24,9 @@ import { LifetimeModule } from './lifetime/lifetime.module';
     MatchesModule,
     TelemetryModule,
     LifetimeModule,
+    MasteryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
