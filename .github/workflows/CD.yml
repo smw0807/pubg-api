@@ -28,10 +28,25 @@ jobs:
         run: docker pull smw0807/pubg-api:1.0.0
 
       - name: Run new container
+        env:
+          PROJECT_NAME: ${{ secrets.PROJECT_NAME }}
+          PROJECT_PORT: ${{ secrets.PROJECT_PORT }}
+          PUBG_API_URL: ${{ secrets.PUBG_API_URL }}
+          PUBG_API_KEY: ${{ secrets.PUBG_API_KEY }}
+          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+          CORS_METHODS: ${{ secrets.CORS_METHODS }}
+          CORS_ALLOWED_HEADERS: ${{ secrets.CORS_ALLOWED_HEADERS }}
         run: |
           docker run -d \
             --name pubg-api \
             --env-file /home/ubuntu/app/.env \
             --restart always \
+            -e PROJECT_NAME=$PROJECT_NAME \
+            -e PROJECT_PORT=$PROJECT_PORT \
+            -e PUBG_API_URL=$PUBG_API_URL \
+            -e PUBG_API_KEY=$PUBG_API_KEY \
+            -e CORS_ORIGIN=$CORS_ORIGIN \
+            -e CORS_METHODS=$CORS_METHODS \
+            -e CORS_ALLOWED_HEADERS=$CORS_ALLOWED_HEADERS \
             -p 3000:3000 \
             smw0807/pubg-api:1.0.0
