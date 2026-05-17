@@ -39,7 +39,6 @@ jobs:
         run: |
           docker run -d \
             --name pubg-api \
-            --env-file /home/ubuntu/app/.env \
             --restart always \
             -e PROJECT_NAME=$PROJECT_NAME \
             -e PROJECT_PORT=$PROJECT_PORT \
