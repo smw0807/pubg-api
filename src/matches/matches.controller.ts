@@ -13,11 +13,11 @@ import {
   PlayerStatsResponseDto,
   TeamRankingResponseDto,
 } from './dto/matches.dto';
-import type { PlatformShard } from 'pubg-kit'
+import type { PlatformShard } from 'pubg-kit';
 @ApiTags('matches')
 @Controller('matches')
 export class MatchesController {
-  constructor(private readonly matchesService: MatchesService) { }
+  constructor(private readonly matchesService: MatchesService) {}
 
   @Get()
   @ApiOperation({

@@ -3,7 +3,11 @@ import { SeasonsService } from './seasons.service';
 import { PubgService } from 'pubg-kit/nestjs';
 import type { Season } from 'pubg-kit';
 
-const createSeason = (id: string, isCurrent: boolean, isOffseason = false): Season =>
+const createSeason = (
+  id: string,
+  isCurrent: boolean,
+  isOffseason = false,
+): Season =>
   ({
     type: 'season',
     id,
@@ -11,7 +15,7 @@ const createSeason = (id: string, isCurrent: boolean, isOffseason = false): Seas
       isCurrentSeason: isCurrent,
       isOffseason,
     },
-  } as unknown as Season);
+  }) as unknown as Season;
 
 const mockShardResult = {
   seasons: { getAll: jest.fn() },
@@ -72,7 +76,9 @@ describe('SeasonsService', () => {
     });
 
     it('API 실패 시 에러를 던져야 한다', async () => {
-      mockShardResult.seasons.getAll.mockRejectedValueOnce(new Error('API Error'));
+      mockShardResult.seasons.getAll.mockRejectedValueOnce(
+        new Error('API Error'),
+      );
 
       await expect(service.getSeasons('kakao')).rejects.toThrow('API Error');
     });

@@ -30,14 +30,21 @@ const createStats = (overrides: Partial<any> = {}) => ({
   ...overrides,
 });
 
-const createParticipant = (id: string, statsOverrides: Partial<any> = {}): Participant =>
+const createParticipant = (
+  id: string,
+  statsOverrides: Partial<any> = {},
+): Participant =>
   ({
     type: 'participant',
     id,
     attributes: { stats: createStats(statsOverrides) },
-  } as unknown as Participant);
+  }) as unknown as Participant;
 
-const createRoster = (id: string, participantIds: string[], rankOverrides: Partial<any> = {}): Roster =>
+const createRoster = (
+  id: string,
+  participantIds: string[],
+  rankOverrides: Partial<any> = {},
+): Roster =>
   ({
     type: 'roster',
     id,
@@ -46,11 +53,16 @@ const createRoster = (id: string, participantIds: string[], rankOverrides: Parti
       won: rankOverrides.rank === 1 ? 'true' : 'false',
     },
     relationships: {
-      participants: { data: participantIds.map(pid => ({ id: pid, type: 'participant' })) },
+      participants: {
+        data: participantIds.map(pid => ({ id: pid, type: 'participant' })),
+      },
     },
-  } as unknown as Roster);
+  }) as unknown as Roster;
 
-const createMatchResponse = (participants: Participant[], rosters: Roster[]): MatchResponse =>
+const createMatchResponse = (
+  participants: Participant[],
+  rosters: Roster[],
+): MatchResponse =>
   ({
     data: {
       id: 'match-abc123',
@@ -63,7 +75,7 @@ const createMatchResponse = (participants: Participant[], rosters: Roster[]): Ma
       },
     },
     included: [...participants, ...rosters],
-  } as unknown as MatchResponse);
+  }) as unknown as MatchResponse;
 
 // ---- Mock setup ----
 const mockShardResult = {
@@ -77,9 +89,31 @@ const mockPubgService = {
 describe('MatchesService', () => {
   let service: MatchesService;
 
-  const p1 = createParticipant('p1', { name: 'Alpha', kills: 8, damageDealt: 800, timeSurvived: 1500, winPlace: 1, killPlace: 1, deathType: 'alive' });
-  const p2 = createParticipant('p2', { name: 'Beta', kills: 5, damageDealt: 600, timeSurvived: 1200, winPlace: 2, killPlace: 3 });
-  const p3 = createParticipant('p3', { name: 'Gamma', kills: 2, damageDealt: 400, timeSurvived: 900, winPlace: 3, killPlace: 5 });
+  const p1 = createParticipant('p1', {
+    name: 'Alpha',
+    kills: 8,
+    damageDealt: 800,
+    timeSurvived: 1500,
+    winPlace: 1,
+    killPlace: 1,
+    deathType: 'alive',
+  });
+  const p2 = createParticipant('p2', {
+    name: 'Beta',
+    kills: 5,
+    damageDealt: 600,
+    timeSurvived: 1200,
+    winPlace: 2,
+    killPlace: 3,
+  });
+  const p3 = createParticipant('p3', {
+    name: 'Gamma',
+    kills: 2,
+    damageDealt: 400,
+    timeSurvived: 900,
+    winPlace: 3,
+    killPlace: 5,
+  });
   const r1 = createRoster('r1', ['p1'], { rank: 1, teamId: 1 });
   const r2 = createRoster('r2', ['p2', 'p3'], { rank: 2, teamId: 2 });
   const matchData = createMatchResponse([p1, p2, p3], [r1, r2]);
@@ -115,7 +149,9 @@ describe('MatchesService', () => {
     it('API 실패 시 에러를 던져야 한다', async () => {
       mockShardResult.matches.get.mockRejectedValueOnce(new Error('Not Found'));
 
-      await expect(service.getMatches('steam', 'bad-id')).rejects.toThrow('Not Found');
+      await expect(service.getMatches('steam', 'bad-id')).rejects.toThrow(
+        'Not Found',
+      );
     });
   });
 
@@ -253,7 +289,10 @@ describe('MatchesService', () => {
     it('킬 수 내림차순으로 정렬해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = (await service.getKillLeaderboard('steam', 'match-abc123'))!;
+      const result = (await service.getKillLeaderboard(
+        'steam',
+        'match-abc123',
+      ))!;
 
       expect(result[0].kills).toBe(8);
       expect(result[1].kills).toBe(5);
@@ -261,12 +300,23 @@ describe('MatchesService', () => {
     });
 
     it('킬이 동점일 때 데미지를 기준으로 정렬해야 한다', async () => {
-      const pa = createParticipant('pa', { name: 'Tie1', kills: 5, damageDealt: 800 });
-      const pb = createParticipant('pb', { name: 'Tie2', kills: 5, damageDealt: 600 });
+      const pa = createParticipant('pa', {
+        name: 'Tie1',
+        kills: 5,
+        damageDealt: 800,
+      });
+      const pb = createParticipant('pb', {
+        name: 'Tie2',
+        kills: 5,
+        damageDealt: 600,
+      });
       const data = createMatchResponse([pa, pb], []);
       mockShardResult.matches.get.mockResolvedValueOnce(data);
 
-      const result = (await service.getKillLeaderboard('steam', 'match-abc123'))!;
+      const result = (await service.getKillLeaderboard(
+        'steam',
+        'match-abc123',
+      ))!;
 
       expect(result[0].name).toBe('Tie1');
       expect(result[1].name).toBe('Tie2');
@@ -275,7 +325,10 @@ describe('MatchesService', () => {
     it('필요한 필드를 모두 포함해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = (await service.getKillLeaderboard('steam', 'match-abc123'))!;
+      const result = (await service.getKillLeaderboard(
+        'steam',
+        'match-abc123',
+      ))!;
 
       expect(result[0]).toHaveProperty('name');
       expect(result[0]).toHaveProperty('kills');
@@ -291,7 +344,10 @@ describe('MatchesService', () => {
     it('데미지 내림차순으로 정렬해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = (await service.getDamageLeaderboard('steam', 'match-abc123'))!;
+      const result = (await service.getDamageLeaderboard(
+        'steam',
+        'match-abc123',
+      ))!;
 
       expect(result[0].damage).toBe(800);
       expect(result[1].damage).toBe(600);
@@ -301,7 +357,10 @@ describe('MatchesService', () => {
     it('올바른 필드를 반환해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = (await service.getDamageLeaderboard('steam', 'match-abc123'))!;
+      const result = (await service.getDamageLeaderboard(
+        'steam',
+        'match-abc123',
+      ))!;
 
       expect(result[0]).toHaveProperty('name');
       expect(result[0]).toHaveProperty('damage');
@@ -316,7 +375,10 @@ describe('MatchesService', () => {
     it('생존 시간 내림차순으로 정렬해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = (await service.getSurvivalLeaderboard('steam', 'match-abc123'))!;
+      const result = (await service.getSurvivalLeaderboard(
+        'steam',
+        'match-abc123',
+      ))!;
 
       expect(result[0].survivalTime).toBe(1500);
       expect(result[1].survivalTime).toBe(1200);
@@ -326,7 +388,10 @@ describe('MatchesService', () => {
     it('올바른 필드를 반환해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = (await service.getSurvivalLeaderboard('steam', 'match-abc123'))!;
+      const result = (await service.getSurvivalLeaderboard(
+        'steam',
+        'match-abc123',
+      ))!;
 
       expect(result[0]).toHaveProperty('name');
       expect(result[0]).toHaveProperty('survivalTime');
@@ -341,7 +406,11 @@ describe('MatchesService', () => {
     it('존재하는 플레이어의 스탯을 반환해야 한다 (대소문자 무시)', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = await service.getPlayerMatchStats('steam', 'match-abc123', 'alpha');
+      const result = await service.getPlayerMatchStats(
+        'steam',
+        'match-abc123',
+        'alpha',
+      );
 
       expect(result).not.toBeNull();
       expect(result?.name).toBe('Alpha');
@@ -351,7 +420,11 @@ describe('MatchesService', () => {
     it('플레이어를 찾을 수 없을 때 null을 반환해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = await service.getPlayerMatchStats('steam', 'match-abc123', 'NonExistent');
+      const result = await service.getPlayerMatchStats(
+        'steam',
+        'match-abc123',
+        'NonExistent',
+      );
 
       expect(result).toBeNull();
     });
@@ -362,7 +435,11 @@ describe('MatchesService', () => {
       const data = createMatchResponse([loneP], []); // 로스터 없음
       mockShardResult.matches.get.mockResolvedValueOnce(data);
 
-      const result = await service.getPlayerMatchStats('steam', 'match-abc123', 'Lone');
+      const result = await service.getPlayerMatchStats(
+        'steam',
+        'match-abc123',
+        'Lone',
+      );
 
       expect(result).toBeNull();
     });
@@ -370,7 +447,11 @@ describe('MatchesService', () => {
     it('로스터의 팀 통계를 포함해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = await service.getPlayerMatchStats('steam', 'match-abc123', 'Alpha');
+      const result = await service.getPlayerMatchStats(
+        'steam',
+        'match-abc123',
+        'Alpha',
+      );
 
       expect(result?.team.rank).toBe(1);
       expect(result?.team.teamId).toBe(1);
@@ -379,7 +460,11 @@ describe('MatchesService', () => {
     it('이동 데이터를 포함해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = await service.getPlayerMatchStats('steam', 'match-abc123', 'Alpha');
+      const result = await service.getPlayerMatchStats(
+        'steam',
+        'match-abc123',
+        'Alpha',
+      );
 
       expect(result?.movement.walkDistance).toBe(2000);
       expect(result?.movement.rideDistance).toBe(500);
@@ -390,7 +475,11 @@ describe('MatchesService', () => {
     it('매치 메타 정보를 포함해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = await service.getPlayerMatchStats('steam', 'match-abc123', 'Alpha');
+      const result = await service.getPlayerMatchStats(
+        'steam',
+        'match-abc123',
+        'Alpha',
+      );
 
       expect(result?.matchId).toBe('match-abc123');
       expect(result?.gameMode).toBe('squad-fpp');
@@ -434,54 +523,95 @@ describe('MatchesService', () => {
   // ---- getPlayerPerformanceAnalysis ----
   describe('getPlayerPerformanceAnalysis', () => {
     it('플레이어가 살아있을 때 KDA를 계산해야 한다 (deathType=alive)', async () => {
-      const aliveP = createParticipant('alive', { name: 'Alive', kills: 5, assists: 3, deathType: 'alive', winPlace: 1 });
+      const aliveP = createParticipant('alive', {
+        name: 'Alive',
+        kills: 5,
+        assists: 3,
+        deathType: 'alive',
+        winPlace: 1,
+      });
       const data = createMatchResponse([aliveP], []);
       mockShardResult.matches.get.mockResolvedValueOnce(data);
 
-      const result = await service.getPlayerPerformanceAnalysis('steam', 'match-abc123');
+      const result = await service.getPlayerPerformanceAnalysis(
+        'steam',
+        'match-abc123',
+      );
 
       expect(result[0].performance.deaths).toBe(0);
       expect(result[0].performance.kda).toBe(8); // (5+3), 사망 없음
     });
 
     it('플레이어가 사망했을 때 KDA를 계산해야 한다 (deaths=1)', async () => {
-      const deadP = createParticipant('dead', { name: 'Dead', kills: 4, assists: 2, deathType: 'byplayer', winPlace: 5 });
+      const deadP = createParticipant('dead', {
+        name: 'Dead',
+        kills: 4,
+        assists: 2,
+        deathType: 'byplayer',
+        winPlace: 5,
+      });
       const data = createMatchResponse([deadP], []);
       mockShardResult.matches.get.mockResolvedValueOnce(data);
 
-      const result = await service.getPlayerPerformanceAnalysis('steam', 'match-abc123');
+      const result = await service.getPlayerPerformanceAnalysis(
+        'steam',
+        'match-abc123',
+      );
 
       expect(result[0].performance.deaths).toBe(1);
       expect(result[0].performance.kda).toBe(6); // (4+2)/1
     });
 
     it('킬이 0일 때 damagePerKill로 0을 반환해야 한다', async () => {
-      const noKillP = createParticipant('nk', { name: 'NoKill', kills: 0, damageDealt: 200, winPlace: 10 });
+      const noKillP = createParticipant('nk', {
+        name: 'NoKill',
+        kills: 0,
+        damageDealt: 200,
+        winPlace: 10,
+      });
       const data = createMatchResponse([noKillP], []);
       mockShardResult.matches.get.mockResolvedValueOnce(data);
 
-      const result = await service.getPlayerPerformanceAnalysis('steam', 'match-abc123');
+      const result = await service.getPlayerPerformanceAnalysis(
+        'steam',
+        'match-abc123',
+      );
 
       expect(result[0].performance.damagePerKill).toBe(0);
       expect(result[0].performance.headshotAccuracy).toBe(0);
     });
 
     it('헤드샷 정확도를 계산해야 한다', async () => {
-      const hsP = createParticipant('hs', { name: 'Sniper', kills: 4, headshotKills: 2, winPlace: 2 });
+      const hsP = createParticipant('hs', {
+        name: 'Sniper',
+        kills: 4,
+        headshotKills: 2,
+        winPlace: 2,
+      });
       const data = createMatchResponse([hsP], []);
       mockShardResult.matches.get.mockResolvedValueOnce(data);
 
-      const result = await service.getPlayerPerformanceAnalysis('steam', 'match-abc123');
+      const result = await service.getPlayerPerformanceAnalysis(
+        'steam',
+        'match-abc123',
+      );
 
       expect(result[0].performance.headshotAccuracy).toBe(0.5);
     });
 
     it('매치 시간 대비 생존 효율성을 계산해야 한다', async () => {
-      const sp = createParticipant('sp', { name: 'Survivor', timeSurvived: 900, winPlace: 2 });
+      const sp = createParticipant('sp', {
+        name: 'Survivor',
+        timeSurvived: 900,
+        winPlace: 2,
+      });
       const data = createMatchResponse([sp], []);
       mockShardResult.matches.get.mockResolvedValueOnce(data);
 
-      const result = await service.getPlayerPerformanceAnalysis('steam', 'match-abc123');
+      const result = await service.getPlayerPerformanceAnalysis(
+        'steam',
+        'match-abc123',
+      );
 
       expect(result[0].efficiency.survivalEfficiency).toBe(0.5); // 900/1800
     });
@@ -489,7 +619,10 @@ describe('MatchesService', () => {
     it('winPlace 오름차순으로 정렬해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = await service.getPlayerPerformanceAnalysis('steam', 'match-abc123');
+      const result = await service.getPlayerPerformanceAnalysis(
+        'steam',
+        'match-abc123',
+      );
 
       expect(result[0].winPlace).toBe(1);
       expect(result[1].winPlace).toBe(2);
@@ -515,11 +648,17 @@ describe('MatchesService', () => {
 
       const result = await service.getMatchStatistics('steam', 'match-abc123');
 
-      expect(result.averages.headshotRate).toBe(Math.round((3 / 15) * 100) / 100);
+      expect(result.averages.headshotRate).toBe(
+        Math.round((3 / 15) * 100) / 100,
+      );
     });
 
     it('총 킬이 0일 때 헤드샷 비율로 0을 반환해야 한다', async () => {
-      const zeroKillP = createParticipant('z', { name: 'Zero', kills: 0, headshotKills: 0 });
+      const zeroKillP = createParticipant('z', {
+        name: 'Zero',
+        kills: 0,
+        headshotKills: 0,
+      });
       const data = createMatchResponse([zeroKillP], []);
       mockShardResult.matches.get.mockResolvedValueOnce(data);
 
@@ -552,7 +691,11 @@ describe('MatchesService', () => {
     it('검색어에 일치하는 플레이어를 반환해야 한다 (대소문자 무시)', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = await service.searchPlayers('steam', 'match-abc123', 'alpha');
+      const result = await service.searchPlayers(
+        'steam',
+        'match-abc123',
+        'alpha',
+      );
 
       expect(result).toHaveLength(1);
       expect(result[0].name).toBe('Alpha');
@@ -565,7 +708,11 @@ describe('MatchesService', () => {
       const data = createMatchResponse([pA, pB, pC], []);
       mockShardResult.matches.get.mockResolvedValueOnce(data);
 
-      const result = await service.searchPlayers('steam', 'match-abc123', 'Player');
+      const result = await service.searchPlayers(
+        'steam',
+        'match-abc123',
+        'Player',
+      );
 
       expect(result).toHaveLength(2);
       expect(result.map(p => p.name)).toContain('Player1');
@@ -575,7 +722,11 @@ describe('MatchesService', () => {
     it('일치하는 플레이어가 없을 때 빈 배열을 반환해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = await service.searchPlayers('steam', 'match-abc123', 'xyz999');
+      const result = await service.searchPlayers(
+        'steam',
+        'match-abc123',
+        'xyz999',
+      );
 
       expect(result).toHaveLength(0);
     });
@@ -592,7 +743,11 @@ describe('MatchesService', () => {
     it('각 플레이어에 대해 올바른 필드를 반환해야 한다', async () => {
       mockShardResult.matches.get.mockResolvedValueOnce(matchData);
 
-      const result = await service.searchPlayers('steam', 'match-abc123', 'Alpha');
+      const result = await service.searchPlayers(
+        'steam',
+        'match-abc123',
+        'Alpha',
+      );
 
       expect(result[0]).toHaveProperty('name');
       expect(result[0]).toHaveProperty('playerId');

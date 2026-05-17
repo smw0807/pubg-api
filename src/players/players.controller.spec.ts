@@ -36,7 +36,10 @@ describe('PlayersController', () => {
 
       const result = await controller.getPlayers('kakao', 'TestPlayer');
 
-      expect(mockPlayersService.getPlayers).toHaveBeenCalledWith('kakao', 'TestPlayer');
+      expect(mockPlayersService.getPlayers).toHaveBeenCalledWith(
+        'kakao',
+        'TestPlayer',
+      );
       expect(result).toEqual(mockPlayer);
     });
 
@@ -45,13 +48,20 @@ describe('PlayersController', () => {
 
       await controller.getPlayers('steam', 'SteamPlayer');
 
-      expect(mockPlayersService.getPlayers).toHaveBeenCalledWith('steam', 'SteamPlayer');
+      expect(mockPlayersService.getPlayers).toHaveBeenCalledWith(
+        'steam',
+        'SteamPlayer',
+      );
     });
 
     it('서비스 에러를 전파해야 한다', async () => {
-      mockPlayersService.getPlayers.mockRejectedValueOnce(new Error('Service Error'));
+      mockPlayersService.getPlayers.mockRejectedValueOnce(
+        new Error('Service Error'),
+      );
 
-      await expect(controller.getPlayers('kakao', 'TestPlayer')).rejects.toThrow('Service Error');
+      await expect(
+        controller.getPlayers('kakao', 'TestPlayer'),
+      ).rejects.toThrow('Service Error');
     });
   });
 });

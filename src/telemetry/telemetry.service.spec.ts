@@ -2,7 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TelemetryService } from './telemetry.service';
 import { PubgService } from 'pubg-kit/nestjs';
 import { MatchesService } from '@/matches/matches.service';
-import type { TelemetryEvent, LogPlayerPosition, LogPlayerKillV2, LogPlayerMakeGroggy, LogPlayerTakeDamage, Asset } from 'pubg-kit';
+import type {
+  TelemetryEvent,
+  LogPlayerPosition,
+  LogPlayerKillV2,
+  LogPlayerMakeGroggy,
+  LogPlayerTakeDamage,
+  Asset,
+} from 'pubg-kit';
 
 // ---- Helpers ----
 const makeCharacter = (name: string, teamId = 1) => ({
@@ -14,16 +21,27 @@ const makeCharacter = (name: string, teamId = 1) => ({
   accountId: `account.${name}`,
 });
 
-const makePositionEvent = (playerName: string, elapsedTime = 10, numAlive = 50): LogPlayerPosition =>
+const makePositionEvent = (
+  playerName: string,
+  elapsedTime = 10,
+  numAlive = 50,
+): LogPlayerPosition =>
   ({
     _T: 'LogPlayerPosition',
     _D: '2024-01-01T00:00:10Z',
-    character: { ...makeCharacter(playerName), location: { x: 1500.7, y: 2500.3, z: 10.5 } },
+    character: {
+      ...makeCharacter(playerName),
+      location: { x: 1500.7, y: 2500.3, z: 10.5 },
+    },
     elapsedTime,
     numAlivePlayers: numAlive,
-  } as unknown as LogPlayerPosition);
+  }) as unknown as LogPlayerPosition;
 
-const makeKillEvent = (killerName: string | null, victimName: string, isSuicide = false): LogPlayerKillV2 =>
+const makeKillEvent = (
+  killerName: string | null,
+  victimName: string,
+  isSuicide = false,
+): LogPlayerKillV2 =>
   ({
     _T: 'LogPlayerKillV2',
     _D: '2024-01-01T00:05:00Z',
@@ -36,9 +54,12 @@ const makeKillEvent = (killerName: string | null, victimName: string, isSuicide 
     },
     isSuicide,
     assists_AccountId: [],
-  } as unknown as LogPlayerKillV2);
+  }) as unknown as LogPlayerKillV2;
 
-const makeGroggyEvent = (attackerName: string | null, victimName: string): LogPlayerMakeGroggy =>
+const makeGroggyEvent = (
+  attackerName: string | null,
+  victimName: string,
+): LogPlayerMakeGroggy =>
   ({
     _T: 'LogPlayerMakeGroggy',
     _D: '2024-01-01T00:04:00Z',
@@ -48,9 +69,13 @@ const makeGroggyEvent = (attackerName: string | null, victimName: string): LogPl
     damageTypeCategory: 'Damage_Gun',
     damageReason: 'ArmShot',
     distance: 200,
-  } as unknown as LogPlayerMakeGroggy);
+  }) as unknown as LogPlayerMakeGroggy;
 
-const makeDamageEvent = (attackerName: string | null, victimName: string, damage: number): LogPlayerTakeDamage =>
+const makeDamageEvent = (
+  attackerName: string | null,
+  victimName: string,
+  damage: number,
+): LogPlayerTakeDamage =>
   ({
     _T: 'LogPlayerTakeDamage',
     _D: '2024-01-01T00:03:00Z',
@@ -61,7 +86,7 @@ const makeDamageEvent = (attackerName: string | null, victimName: string, damage
     damageTypeCategory: 'Damage_Gun',
     damageReason: 'TorsoShot',
     distance: 100,
-  } as unknown as LogPlayerTakeDamage);
+  }) as unknown as LogPlayerTakeDamage;
 
 const mockAsset: Asset = {
   type: 'asset',
@@ -75,7 +100,16 @@ const mockAsset: Asset = {
 } as unknown as Asset;
 
 const mockMatchData = {
-  data: { id: 'match-1', type: 'match', attributes: { gameMode: 'squad', mapName: 'Erangel_Main', duration: 1800, createdAt: '2024-01-01T00:00:00Z' } },
+  data: {
+    id: 'match-1',
+    type: 'match',
+    attributes: {
+      gameMode: 'squad',
+      mapName: 'Erangel_Main',
+      duration: 1800,
+      createdAt: '2024-01-01T00:00:00Z',
+    },
+  },
   included: [mockAsset],
 };
 
@@ -123,7 +157,10 @@ describe('TelemetryService', () => {
       const events: TelemetryEvent[] = [
         makePositionEvent('Alpha') as unknown as TelemetryEvent,
         makePositionEvent('Beta') as unknown as TelemetryEvent,
-        { _T: 'LogMatchStart', _D: '2024-01-01T00:00:00Z' } as unknown as TelemetryEvent,
+        {
+          _T: 'LogMatchStart',
+          _D: '2024-01-01T00:00:00Z',
+        } as unknown as TelemetryEvent,
       ];
       mockMatchesService.getMatches.mockResolvedValueOnce(mockMatchData);
       mockShardResult.telemetry.get.mockResolvedValueOnce(events);
@@ -148,7 +185,9 @@ describe('TelemetryService', () => {
     });
 
     it('위치 좌표를 반올림해야 한다', async () => {
-      const events: TelemetryEvent[] = [makePositionEvent('Alpha') as unknown as TelemetryEvent];
+      const events: TelemetryEvent[] = [
+        makePositionEvent('Alpha') as unknown as TelemetryEvent,
+      ];
       mockMatchesService.getMatches.mockResolvedValueOnce(mockMatchData);
       mockShardResult.telemetry.get.mockResolvedValueOnce(events);
 
@@ -169,7 +208,9 @@ describe('TelemetryService', () => {
     });
 
     it('numAlivePlayers와 elapsedTime을 포함해야 한다', async () => {
-      const events: TelemetryEvent[] = [makePositionEvent('Alpha', 120, 30) as unknown as TelemetryEvent];
+      const events: TelemetryEvent[] = [
+        makePositionEvent('Alpha', 120, 30) as unknown as TelemetryEvent,
+      ];
       mockMatchesService.getMatches.mockResolvedValueOnce(mockMatchData);
       mockShardResult.telemetry.get.mockResolvedValueOnce(events);
 
@@ -225,7 +266,9 @@ describe('TelemetryService', () => {
     });
 
     it('킬러가 null일 때 처리해야 한다 (자살/존 킬)', async () => {
-      const events: TelemetryEvent[] = [makeKillEvent(null, 'Beta', true) as unknown as TelemetryEvent];
+      const events: TelemetryEvent[] = [
+        makeKillEvent(null, 'Beta', true) as unknown as TelemetryEvent,
+      ];
       mockMatchesService.getMatches.mockResolvedValueOnce(mockMatchData);
       mockShardResult.telemetry.get.mockResolvedValueOnce(events);
 
@@ -236,7 +279,9 @@ describe('TelemetryService', () => {
     });
 
     it('무기 및 거리 정보를 포함해야 한다', async () => {
-      const events: TelemetryEvent[] = [makeKillEvent('Alpha', 'Beta') as unknown as TelemetryEvent];
+      const events: TelemetryEvent[] = [
+        makeKillEvent('Alpha', 'Beta') as unknown as TelemetryEvent,
+      ];
       mockMatchesService.getMatches.mockResolvedValueOnce(mockMatchData);
       mockShardResult.telemetry.get.mockResolvedValueOnce(events);
 
@@ -248,7 +293,9 @@ describe('TelemetryService', () => {
     });
 
     it('텔레메트리에 킬이 없을 때 빈 배열을 반환해야 한다', async () => {
-      const events: TelemetryEvent[] = [{ _T: 'LogMatchStart', _D: '' } as unknown as TelemetryEvent];
+      const events: TelemetryEvent[] = [
+        { _T: 'LogMatchStart', _D: '' } as unknown as TelemetryEvent,
+      ];
       mockMatchesService.getMatches.mockResolvedValueOnce(mockMatchData);
       mockShardResult.telemetry.get.mockResolvedValueOnce(events);
 
@@ -302,7 +349,9 @@ describe('TelemetryService', () => {
     });
 
     it('공격자가 null일 때 처리해야 한다', async () => {
-      const events: TelemetryEvent[] = [makeGroggyEvent(null, 'Beta') as unknown as TelemetryEvent];
+      const events: TelemetryEvent[] = [
+        makeGroggyEvent(null, 'Beta') as unknown as TelemetryEvent,
+      ];
       mockMatchesService.getMatches.mockResolvedValueOnce(mockMatchData);
       mockShardResult.telemetry.get.mockResolvedValueOnce(events);
 
@@ -364,7 +413,9 @@ describe('TelemetryService', () => {
     });
 
     it('공격자가 null일 때 처리해야 한다 (존 데미지)', async () => {
-      const events: TelemetryEvent[] = [makeDamageEvent(null, 'Beta', 25) as unknown as TelemetryEvent];
+      const events: TelemetryEvent[] = [
+        makeDamageEvent(null, 'Beta', 25) as unknown as TelemetryEvent,
+      ];
       mockMatchesService.getMatches.mockResolvedValueOnce(mockMatchData);
       mockShardResult.telemetry.get.mockResolvedValueOnce(events);
 
@@ -375,7 +426,9 @@ describe('TelemetryService', () => {
     });
 
     it('데미지량과 무기 정보를 포함해야 한다', async () => {
-      const events: TelemetryEvent[] = [makeDamageEvent('Alpha', 'Beta', 75) as unknown as TelemetryEvent];
+      const events: TelemetryEvent[] = [
+        makeDamageEvent('Alpha', 'Beta', 75) as unknown as TelemetryEvent,
+      ];
       mockMatchesService.getMatches.mockResolvedValueOnce(mockMatchData);
       mockShardResult.telemetry.get.mockResolvedValueOnce(events);
 

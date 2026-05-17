@@ -8,11 +8,11 @@ import {
 import { PlayersService } from './players.service';
 import { PlatformType } from '@/constants/platform';
 import { PlayerDataResponseDto } from './dto/players.dto';
-import type { Player } from 'pubg-kit'
+import type { Player } from 'pubg-kit';
 @ApiTags('players')
 @Controller('players')
 export class PlayersController {
-  constructor(private readonly playersService: PlayersService) { }
+  constructor(private readonly playersService: PlayersService) {}
 
   @Get()
   @ApiOperation({

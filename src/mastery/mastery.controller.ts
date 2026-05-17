@@ -1,13 +1,16 @@
-import { Controller, Get, Query } from "@nestjs/common";
-import { ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
-import { MasteryService } from "./mastery.service";
-import { PlatformShard } from "pubg-kit";
-import { PlayersService } from "@/players/players.service";
+import { Controller, Get, Query } from '@nestjs/common';
+import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { MasteryService } from './mastery.service';
+import { PlatformShard } from 'pubg-kit';
+import { PlayersService } from '@/players/players.service';
 
 @ApiTags('mastery')
 @Controller('mastery')
 export class MasteryController {
-  constructor(private readonly masteryService: MasteryService, private readonly playersService: PlayersService) { }
+  constructor(
+    private readonly masteryService: MasteryService,
+    private readonly playersService: PlayersService,
+  ) {}
 
   @Get('weapon')
   @ApiOperation({

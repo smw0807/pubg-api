@@ -27,12 +27,20 @@ describe('StatsController', () => {
 
   describe('getRankStats', () => {
     it('StatsService.getRankStats에 위임해야 한다', async () => {
-      const mockResult = { duo: {}, squad: {}, squadFpp: {}, banType: 'Innocent' };
+      const mockResult = {
+        duo: {},
+        squad: {},
+        squadFpp: {},
+        banType: 'Innocent',
+      };
       mockStatsService.getRankStats.mockResolvedValueOnce(mockResult);
 
       const result = await controller.getRankStats('kakao', 'TestPlayer');
 
-      expect(mockStatsService.getRankStats).toHaveBeenCalledWith('kakao', 'TestPlayer');
+      expect(mockStatsService.getRankStats).toHaveBeenCalledWith(
+        'kakao',
+        'TestPlayer',
+      );
       expect(result).toEqual(mockResult);
     });
   });
@@ -44,7 +52,10 @@ describe('StatsController', () => {
 
       const result = await controller.getNormalStats('steam', 'SteamPlayer');
 
-      expect(mockStatsService.getNormalStats).toHaveBeenCalledWith('steam', 'SteamPlayer');
+      expect(mockStatsService.getNormalStats).toHaveBeenCalledWith(
+        'steam',
+        'SteamPlayer',
+      );
       expect(result).toEqual(mockResult);
     });
   });
@@ -54,9 +65,15 @@ describe('StatsController', () => {
       const mockResult = [{ matchId: 'match-1' }, { matchId: 'match-2' }];
       mockStatsService.getRecentMatchStats.mockResolvedValueOnce(mockResult);
 
-      const result = await controller.getRecentMatchStats('kakao', 'TestPlayer');
+      const result = await controller.getRecentMatchStats(
+        'kakao',
+        'TestPlayer',
+      );
 
-      expect(mockStatsService.getRecentMatchStats).toHaveBeenCalledWith('kakao', 'TestPlayer');
+      expect(mockStatsService.getRecentMatchStats).toHaveBeenCalledWith(
+        'kakao',
+        'TestPlayer',
+      );
       expect(result).toEqual(mockResult);
     });
   });

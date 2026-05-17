@@ -1,7 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PubgService } from 'pubg-kit/nestjs';
 import { MatchesService } from '@/matches/matches.service';
-import type { PlatformShard, TelemetryEvent, Asset, LogPlayerPosition, LogPlayerKillV2, LogPlayerMakeGroggy, LogPlayerTakeDamage } from 'pubg-kit';
+import type {
+  PlatformShard,
+  TelemetryEvent,
+  Asset,
+  LogPlayerPosition,
+  LogPlayerKillV2,
+  LogPlayerMakeGroggy,
+  LogPlayerTakeDamage,
+} from 'pubg-kit';
 
 @Injectable()
 export class TelemetryService {
@@ -10,7 +18,7 @@ export class TelemetryService {
   constructor(
     private readonly pubgService: PubgService,
     private readonly matchesService: MatchesService,
-  ) { }
+  ) {}
 
   private async fetchTelemetry(
     platform: PlatformShard,
@@ -27,9 +35,7 @@ export class TelemetryService {
       return [];
     }
 
-    return this.pubgService.shard(platform).telemetry.get(
-      asset.attributes.URL,
-    );
+    return this.pubgService.shard(platform).telemetry.get(asset.attributes.URL);
   }
 
   async getMovementLog(
@@ -80,29 +86,28 @@ export class TelemetryService {
       );
     }
 
-    return kills
-      .map(e => ({
-        timestamp: e._D,
-        killer: e.killer
-          ? {
+    return kills.map(e => ({
+      timestamp: e._D,
+      killer: e.killer
+        ? {
             name: e.killer.name,
             teamId: e.killer.teamId,
             location: e.killer.location,
             health: e.killer.health,
           }
-          : null,
-        victim: {
-          name: e.victim.name,
-          teamId: e.victim.teamId,
-          location: e.victim.location,
-          health: e.victim.health,
-        },
-        weapon: e.killerDamageInfo?.damageCauserName ?? 'Unknown',
-        damageType: e.killerDamageInfo?.damageTypeCategory ?? null,
-        distance: e.killerDamageInfo?.distance ?? null,
-        isSuicide: e.isSuicide,
-        assists: e.assists_AccountId,
-      }));
+        : null,
+      victim: {
+        name: e.victim.name,
+        teamId: e.victim.teamId,
+        location: e.victim.location,
+        health: e.victim.health,
+      },
+      weapon: e.killerDamageInfo?.damageCauserName ?? 'Unknown',
+      damageType: e.killerDamageInfo?.damageTypeCategory ?? null,
+      distance: e.killerDamageInfo?.distance ?? null,
+      isSuicide: e.isSuicide,
+      assists: e.assists_AccountId,
+    }));
   }
 
   async getGroggyLog(
@@ -123,27 +128,26 @@ export class TelemetryService {
       );
     }
 
-    return groggies
-      .map(e => ({
-        timestamp: e._D,
-        attacker: e.attacker
-          ? {
+    return groggies.map(e => ({
+      timestamp: e._D,
+      attacker: e.attacker
+        ? {
             name: e.attacker.name,
             teamId: e.attacker.teamId,
             location: e.attacker.location,
           }
-          : null,
-        victim: {
-          name: e.victim.name,
-          teamId: e.victim.teamId,
-          location: e.victim.location,
-          health: e.victim.health,
-        },
-        weapon: e.damageCauserName,
-        damageType: e.damageTypeCategory,
-        damageReason: e.damageReason,
-        distance: e.distance,
-      }));
+        : null,
+      victim: {
+        name: e.victim.name,
+        teamId: e.victim.teamId,
+        location: e.victim.location,
+        health: e.victim.health,
+      },
+      weapon: e.damageCauserName,
+      damageType: e.damageTypeCategory,
+      damageReason: e.damageReason,
+      distance: e.distance,
+    }));
   }
 
   async getDamageLog(
@@ -168,10 +172,10 @@ export class TelemetryService {
       timestamp: e._D,
       attacker: e.attacker
         ? {
-          name: e.attacker.name,
-          teamId: e.attacker.teamId,
-          location: e.attacker.location,
-        }
+            name: e.attacker.name,
+            teamId: e.attacker.teamId,
+            location: e.attacker.location,
+          }
         : null,
       victim: {
         name: e.victim.name,

@@ -43,28 +43,40 @@ describe('LifetimeService', () => {
 
   describe('getLifetimeStats', () => {
     it('플레이어의 평생 스탯을 반환해야 한다', async () => {
-      mockShardResult.stats.getLifetimeStats.mockResolvedValueOnce(mockLifetimeStats);
+      mockShardResult.stats.getLifetimeStats.mockResolvedValueOnce(
+        mockLifetimeStats,
+      );
 
       const result = await service.getLifetimeStats('kakao', 'account.player1');
 
       expect(mockPubgService.shard).toHaveBeenCalledWith('kakao');
-      expect(mockShardResult.stats.getLifetimeStats).toHaveBeenCalledWith('account.player1');
+      expect(mockShardResult.stats.getLifetimeStats).toHaveBeenCalledWith(
+        'account.player1',
+      );
       expect(result).toEqual(mockLifetimeStats);
     });
 
     it('steam 플랫폼에서도 동작해야 한다', async () => {
-      mockShardResult.stats.getLifetimeStats.mockResolvedValueOnce(mockLifetimeStats);
+      mockShardResult.stats.getLifetimeStats.mockResolvedValueOnce(
+        mockLifetimeStats,
+      );
 
       await service.getLifetimeStats('steam', 'account.steam123');
 
       expect(mockPubgService.shard).toHaveBeenCalledWith('steam');
-      expect(mockShardResult.stats.getLifetimeStats).toHaveBeenCalledWith('account.steam123');
+      expect(mockShardResult.stats.getLifetimeStats).toHaveBeenCalledWith(
+        'account.steam123',
+      );
     });
 
     it('API 실패 시 에러를 던져야 한다', async () => {
-      mockShardResult.stats.getLifetimeStats.mockRejectedValueOnce(new Error('Not Found'));
+      mockShardResult.stats.getLifetimeStats.mockRejectedValueOnce(
+        new Error('Not Found'),
+      );
 
-      await expect(service.getLifetimeStats('kakao', 'invalid.id')).rejects.toThrow('Not Found');
+      await expect(
+        service.getLifetimeStats('kakao', 'invalid.id'),
+      ).rejects.toThrow('Not Found');
     });
   });
 });

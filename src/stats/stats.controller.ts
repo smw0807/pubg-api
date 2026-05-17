@@ -1,12 +1,11 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { StatsService } from './stats.service';
-import { PlatformType } from '@/constants/platform';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
-import type { PlatformShard } from 'pubg-kit'
+import type { PlatformShard } from 'pubg-kit';
 
 @Controller('stats')
 export class StatsController {
-  constructor(private readonly statsService: StatsService) { }
+  constructor(private readonly statsService: StatsService) {}
 
   @Get('rank')
   @ApiOperation({ summary: '랭크 스탯 조회' })

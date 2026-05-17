@@ -1,10 +1,15 @@
 import { PubgService } from 'pubg-kit/nestjs';
 import { Injectable, Logger } from '@nestjs/common';
-import type { PlatformShard, MatchResponse, Participant, Roster } from 'pubg-kit'
+import type {
+  PlatformShard,
+  MatchResponse,
+  Participant,
+  Roster,
+} from 'pubg-kit';
 @Injectable()
 export class MatchesService {
   private readonly logger = new Logger(MatchesService.name);
-  constructor(private readonly pubgService: PubgService) { }
+  constructor(private readonly pubgService: PubgService) {}
 
   async getMatches(
     platform: PlatformShard,
@@ -59,7 +64,10 @@ export class MatchesService {
 
     return rosters
       .map(roster => {
-        const teamParticipants = this.getTeamParticipants(roster, participants ?? []);
+        const teamParticipants = this.getTeamParticipants(
+          roster,
+          participants ?? [],
+        );
         const teamStats = this.calculateTeamStats(teamParticipants);
 
         return {
@@ -84,37 +92,38 @@ export class MatchesService {
     const matchData = await this.getMatches(platform, matchId);
     const participants = this.getParticipants(matchData);
 
-    return participants?.map(participant => {
-      const stats = participant.attributes.stats;
-      return {
-        name: stats.name,
-        playerId: stats.playerId,
-        kills: stats.kills,
-        assists: stats.assists,
-        damage: stats.damageDealt,
-        headshotKills: stats.headshotKills,
-        survivalTime: stats.timeSurvived,
-        winPlace: stats.winPlace,
-        killPlace: stats.killPlace,
-        distance: {
-          walk: stats.walkDistance,
-          ride: stats.rideDistance,
-          swim: stats.swimDistance,
-          total: stats.walkDistance + stats.rideDistance + stats.swimDistance,
-        },
-        items: {
-          boosts: stats.boosts,
-          heals: stats.heals,
-          weaponsAcquired: stats.weaponsAcquired,
-        },
-        performance: {
-          killStreaks: stats.killStreaks,
-          longestKill: stats.longestKill,
-          revives: stats.revives,
-          DBNOs: stats.DBNOs,
-        },
-      };
-    })
+    return participants
+      ?.map(participant => {
+        const stats = participant.attributes.stats;
+        return {
+          name: stats.name,
+          playerId: stats.playerId,
+          kills: stats.kills,
+          assists: stats.assists,
+          damage: stats.damageDealt,
+          headshotKills: stats.headshotKills,
+          survivalTime: stats.timeSurvived,
+          winPlace: stats.winPlace,
+          killPlace: stats.killPlace,
+          distance: {
+            walk: stats.walkDistance,
+            ride: stats.rideDistance,
+            swim: stats.swimDistance,
+            total: stats.walkDistance + stats.rideDistance + stats.swimDistance,
+          },
+          items: {
+            boosts: stats.boosts,
+            heals: stats.heals,
+            weaponsAcquired: stats.weaponsAcquired,
+          },
+          performance: {
+            killStreaks: stats.killStreaks,
+            longestKill: stats.longestKill,
+            revives: stats.revives,
+            DBNOs: stats.DBNOs,
+          },
+        };
+      })
       .sort((a, b) => a.winPlace - b.winPlace);
   }
 
@@ -310,7 +319,10 @@ export class MatchesService {
 
     return rosters
       .map(roster => {
-        const teamParticipants = this.getTeamParticipants(roster, participants ?? []);
+        const teamParticipants = this.getTeamParticipants(
+          roster,
+          participants ?? [],
+        );
         const teamStats = this.calculateTeamStats(teamParticipants);
 
         // 팀 내 최고 성과자들
@@ -322,14 +334,14 @@ export class MatchesService {
 
         const topDamage = teamParticipants.reduce((top, current) =>
           current.attributes.stats.damageDealt >
-            top.attributes.stats.damageDealt
+          top.attributes.stats.damageDealt
             ? current
             : top,
         );
 
         const topSurvivor = teamParticipants.reduce((top, current) =>
           current.attributes.stats.timeSurvived >
-            top.attributes.stats.timeSurvived
+          top.attributes.stats.timeSurvived
             ? current
             : top,
         );

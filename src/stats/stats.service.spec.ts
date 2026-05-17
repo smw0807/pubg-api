@@ -94,7 +94,9 @@ describe('StatsService', () => {
     beforeEach(() => {
       mockPlayersService.getPlayers.mockResolvedValue(mockPlayer);
       mockSeasonsService.getCurrentSeason.mockResolvedValue(mockSeason);
-      mockShardResult.stats.getPlayerRankedStats.mockResolvedValue(mockRankedStatsResponse);
+      mockShardResult.stats.getPlayerRankedStats.mockResolvedValue(
+        mockRankedStatsResponse,
+      );
     });
 
     it('duo, squad, squadFpp 스탯과 banType을 반환해야 한다', async () => {
@@ -109,7 +111,10 @@ describe('StatsService', () => {
     it('올바른 플랫폼과 playerName으로 getPlayers를 호출해야 한다', async () => {
       await service.getRankStats('steam', 'SteamPlayer');
 
-      expect(mockPlayersService.getPlayers).toHaveBeenCalledWith('steam', 'SteamPlayer');
+      expect(mockPlayersService.getPlayers).toHaveBeenCalledWith(
+        'steam',
+        'SteamPlayer',
+      );
     });
 
     it('올바른 플랫폼으로 getCurrentSeason을 호출해야 한다', async () => {
@@ -128,9 +133,13 @@ describe('StatsService', () => {
     });
 
     it('플레이어를 찾을 수 없을 때 에러를 전파해야 한다', async () => {
-      mockPlayersService.getPlayers.mockRejectedValueOnce(new Error('Player not found'));
+      mockPlayersService.getPlayers.mockRejectedValueOnce(
+        new Error('Player not found'),
+      );
 
-      await expect(service.getRankStats('kakao', 'Unknown')).rejects.toThrow('Player not found');
+      await expect(service.getRankStats('kakao', 'Unknown')).rejects.toThrow(
+        'Player not found',
+      );
     });
   });
 
@@ -138,7 +147,9 @@ describe('StatsService', () => {
     beforeEach(() => {
       mockPlayersService.getPlayers.mockResolvedValue(mockPlayer);
       mockSeasonsService.getCurrentSeason.mockResolvedValue(mockSeason);
-      mockShardResult.stats.getPlayerStats.mockResolvedValue(mockNormalStatsResponse);
+      mockShardResult.stats.getPlayerStats.mockResolvedValue(
+        mockNormalStatsResponse,
+      );
     });
 
     it('모든 게임 모드 스탯과 banType을 반환해야 한다', async () => {
@@ -167,8 +178,14 @@ describe('StatsService', () => {
     it('최근 매치의 스탯을 모두 반환해야 한다', async () => {
       mockPlayersService.getPlayers.mockResolvedValueOnce(mockPlayer);
       mockMatchesService.getPlayerMatchStats
-        .mockResolvedValueOnce({ matchId: 'match-1', performance: { kills: 3 } })
-        .mockResolvedValueOnce({ matchId: 'match-2', performance: { kills: 5 } });
+        .mockResolvedValueOnce({
+          matchId: 'match-1',
+          performance: { kills: 3 },
+        })
+        .mockResolvedValueOnce({
+          matchId: 'match-2',
+          performance: { kills: 5 },
+        });
 
       const result = await service.getRecentMatchStats('kakao', 'TestPlayer');
 
@@ -195,7 +212,9 @@ describe('StatsService', () => {
         attributes: { banType: 'Innocent' },
         relationships: {},
       };
-      mockPlayersService.getPlayers.mockResolvedValueOnce(playerNoRelationships);
+      mockPlayersService.getPlayers.mockResolvedValueOnce(
+        playerNoRelationships,
+      );
 
       const result = await service.getRecentMatchStats('kakao', 'TestPlayer');
 
@@ -208,8 +227,16 @@ describe('StatsService', () => {
 
       await service.getRecentMatchStats('kakao', 'TestPlayer');
 
-      expect(mockMatchesService.getPlayerMatchStats).toHaveBeenCalledWith('kakao', 'match-1', 'TestPlayer');
-      expect(mockMatchesService.getPlayerMatchStats).toHaveBeenCalledWith('kakao', 'match-2', 'TestPlayer');
+      expect(mockMatchesService.getPlayerMatchStats).toHaveBeenCalledWith(
+        'kakao',
+        'match-1',
+        'TestPlayer',
+      );
+      expect(mockMatchesService.getPlayerMatchStats).toHaveBeenCalledWith(
+        'kakao',
+        'match-2',
+        'TestPlayer',
+      );
     });
   });
 });

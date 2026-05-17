@@ -1,10 +1,9 @@
 import { PubgService } from 'pubg-kit/nestjs';
-import { PlatformType } from '@/constants/platform';
 import { MatchesService } from '@/matches/matches.service';
 import { PlayersService } from '@/players/players.service';
 import { SeasonsService } from '@/seasons/seasons.service';
 import { Injectable } from '@nestjs/common';
-import type { PlatformShard } from 'pubg-kit'
+import type { PlatformShard } from 'pubg-kit';
 @Injectable()
 export class StatsService {
   constructor(
@@ -12,7 +11,7 @@ export class StatsService {
     private readonly playersService: PlayersService,
     private readonly seasonsService: SeasonsService,
     private readonly matchesService: MatchesService,
-  ) { }
+  ) {}
 
   // 랭크 스탯 조회
   async getRankStats(platform: PlatformShard, playerName: string) {
@@ -26,7 +25,9 @@ export class StatsService {
     const seasonId = season.id;
 
     // 현재 시즌 스탯 조회
-    const stats = await this.pubgService.shard(platform).stats.getPlayerRankedStats(playerId, seasonId);
+    const stats = await this.pubgService
+      .shard(platform)
+      .stats.getPlayerRankedStats(playerId, seasonId);
 
     const duoStats = stats.data.attributes.rankedGameModeStats.duo;
     const squadStats = stats.data.attributes.rankedGameModeStats.squad;
@@ -53,7 +54,9 @@ export class StatsService {
     const seasonId = season.id;
 
     // 현재 시즌 스탯 조회
-    const stats = await this.pubgService.shard(platform).stats.getPlayerStats(playerId, seasonId);
+    const stats = await this.pubgService
+      .shard(platform)
+      .stats.getPlayerStats(playerId, seasonId);
 
     const duoStats = stats.data.attributes.gameModeStats.duo;
     const duoFppStats = stats.data.attributes.gameModeStats['duo-fpp'];

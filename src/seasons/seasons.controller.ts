@@ -11,11 +11,11 @@ import {
   SeasonsListResponseDto,
   SeasonDataResponseDto,
 } from './dto/seasons.dto';
-import type { PlatformShard, Season } from 'pubg-kit'
+import type { PlatformShard, Season } from 'pubg-kit';
 @ApiTags('seasons')
 @Controller('seasons')
 export class SeasonsController {
-  constructor(private readonly seasonsService: SeasonsService) { }
+  constructor(private readonly seasonsService: SeasonsService) {}
 
   @Get()
   @ApiOperation({

@@ -4,10 +4,12 @@ import type { PlatformShard } from 'pubg-kit';
 
 @Injectable()
 export class LifetimeService {
-  constructor(private readonly pubgService: PubgService) { }
+  constructor(private readonly pubgService: PubgService) {}
 
   async getLifetimeStats(platform: PlatformShard, accountId: string) {
-    const stats = await this.pubgService.shard(platform).stats.getLifetimeStats(accountId);
+    const stats = await this.pubgService
+      .shard(platform)
+      .stats.getLifetimeStats(accountId);
     return stats;
   }
 }

@@ -51,7 +51,9 @@ describe('PlayersService', () => {
       const result = await service.getPlayers('kakao', 'TestPlayer');
 
       expect(mockPubgService.shard).toHaveBeenCalledWith('kakao');
-      expect(mockShardResult.players.getByNames).toHaveBeenCalledWith(['TestPlayer']);
+      expect(mockShardResult.players.getByNames).toHaveBeenCalledWith([
+        'TestPlayer',
+      ]);
       expect(result).toEqual(mockPlayer);
     });
 
@@ -61,7 +63,9 @@ describe('PlayersService', () => {
       await service.getPlayers('steam', 'SteamPlayer');
 
       expect(mockPubgService.shard).toHaveBeenCalledWith('steam');
-      expect(mockShardResult.players.getByNames).toHaveBeenCalledWith(['SteamPlayer']);
+      expect(mockShardResult.players.getByNames).toHaveBeenCalledWith([
+        'SteamPlayer',
+      ]);
     });
 
     it('플레이어 목록이 비어있을 때 undefined를 반환해야 한다', async () => {
@@ -73,9 +77,13 @@ describe('PlayersService', () => {
     });
 
     it('PubgService가 에러를 던질 때 에러를 전파해야 한다', async () => {
-      mockShardResult.players.getByNames.mockRejectedValueOnce(new Error('API Error'));
+      mockShardResult.players.getByNames.mockRejectedValueOnce(
+        new Error('API Error'),
+      );
 
-      await expect(service.getPlayers('kakao', 'TestPlayer')).rejects.toThrow('API Error');
+      await expect(service.getPlayers('kakao', 'TestPlayer')).rejects.toThrow(
+        'API Error',
+      );
     });
 
     it('playerName을 단일 요소 배열로 전달해야 한다', async () => {
@@ -83,7 +91,9 @@ describe('PlayersService', () => {
 
       await service.getPlayers('kakao', 'SinglePlayer');
 
-      expect(mockShardResult.players.getByNames).toHaveBeenCalledWith(['SinglePlayer']);
+      expect(mockShardResult.players.getByNames).toHaveBeenCalledWith([
+        'SinglePlayer',
+      ]);
     });
   });
 });
